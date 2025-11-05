@@ -6,7 +6,7 @@
 Window myWindow;
 World* myWorld;
 
-int WORLD_SIZE = 20;
+int WORLD_SIZE = 10;
 int WORLD_SEED = 0;
 
 float CAM_X = 0.0f;
@@ -34,7 +34,7 @@ Game3D::~Game3D()
 
 void Game3D::start()
 {
-	myWindow.mainLoop();
+	myWindow.mainLoop(myWorld);
 }
 
 void Game3D::stop()

@@ -20,6 +20,8 @@ public:
 
 	void saveWorld(const char* _filename);
 
+	void updateWorld();
+
 	/*
 	 Destructor to clean up any resources allocated for the world.
 	 Can be used to delete this world, or unload from memory if making several worlds.

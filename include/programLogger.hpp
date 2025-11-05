@@ -81,6 +81,16 @@
 
  */
 
+
+/*
+Usage: 
+using ProgramLogger::log;
+using ProgramLogger::LogLevel;
+Then call log function like so:
+log(<message>);
+or
+log(<message>, LogLevel::<logLevel>);
+*/
 namespace ProgramLogger {
     static const bool printDebug = false;
 

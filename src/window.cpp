@@ -16,6 +16,8 @@
 //#include "../include/vertexData.hpp"
 
 
+
+
 // camera stuff
 
 
@@ -108,7 +110,7 @@ void Window::loadOpenGL()
     }
 }
 
-void Window::mainLoop()
+void Window::mainLoop(World* _world)
 {
 
     // render loop
@@ -125,6 +127,8 @@ void Window::mainLoop()
         // input
         // -----
         processInput(window);
+
+        _world->updateWorld();
 
         // Rendering commands here
 		// ----------------------

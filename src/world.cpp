@@ -42,11 +42,11 @@ void World::createWorld(float seed)
 	//log("test warning", LogLevel::WARNING);
 	//log("test info", LogLevel::INFO);
 	int cubeID = 0;
-	for (int x = 0; x < worldSize / 2; x++)
+	for (int x = 0; x < worldSize; x++)
 	{
-		for (int y = 0; y < worldSize / 2; y++)
+		for (int y = 0; y < worldSize; y++)
 		{
-			for (int z = 0; z < worldSize / 2; z++)
+			for (int z = 0; z < worldSize; z++)
 			{
 				log("Creating cube at position: (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")", LogLevel::DEBUG);
 				log("Cube ID: " + std::to_string(cubeID), LogLevel::DEBUG);
@@ -61,6 +61,11 @@ void World::createWorld(float seed)
 	}
 }
 
+void World::updateWorld()
+{
+	// Placeholder for future world update logic
+	//log("World update");
+}
 
 World::~World()
 {
