@@ -73,15 +73,35 @@ void World::addCube(EntityCube _cube)
 	// Cube ID of -1 is invalid/uninitialized. -1 is a default value for uninisialized cube entities.
 	if (_cube.getEntityID() != -1) 
 	{
-		entityCubeVector.emplace_back(_cube);
-		worldShader->vertData.cubePositions.emplace_back(_cube.getEntityPosition());
+		if (!isPositionOccupied(_cube.getEntityPosition())) 
+		{
+			entityCubeVector.emplace_back(_cube);
+			worldShader->vertData.cubePositions.emplace_back(_cube.getEntityPosition());
+		}
+		
 	}
 }
 
 void World::spawnEntityCubeAt(glm::vec3 _pos) 
 {
-	addCube(EntityCube(cubeID, _pos));
-	cubeID++;
+	if (!isPositionOccupied(_pos))
+	{
+		addCube(EntityCube(cubeID, _pos));
+		cubeID++;
+	}
+}
+
+bool World::isPositionOccupied(glm::vec3 _pos)
+{
+	for (EntityCube cube : entityCubeVector) 
+	{
+		if (cube.getEntityPosition() == _pos)
+		{
+			log("Position is already occupied.");
+			return true;
+		}
+	}
+	return false;
 }
 
 World::~World()

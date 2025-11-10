@@ -37,6 +37,8 @@ public:
 	// a unique ID and use the given _pos value.
 	void spawnEntityCubeAt(glm::vec3 _pos);
 
+	bool isPositionOccupied(glm::vec3 _pos);
+
 
 	/*
 	 Destructor to clean up any resources allocated for the world.
