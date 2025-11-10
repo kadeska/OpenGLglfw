@@ -1,7 +1,7 @@
 #include "../include/world.hpp"
 #include "../include/vertexData.hpp"
 #include "../include/worldData.hpp"
-#include "../include/entity/EntityCube.hpp"
+//#include "../include/entity/EntityCube.hpp"
 
 #include "../include/programLogger.hpp"
 
@@ -12,6 +12,8 @@ using ProgramLogger::LogLevel;
 
 
 std::vector<EntityCube> entityCubeVector = std::vector<EntityCube>();
+int cubeID = 0;
+
 
 Shader* worldShader;
 
@@ -41,7 +43,7 @@ void World::createWorld(float seed)
 	//log("test error", LogLevel::ERROR);
 	//log("test warning", LogLevel::WARNING);
 	//log("test info", LogLevel::INFO);
-	int cubeID = 0;
+	//int cubeID = 0;
 	for (int x = 0; x < worldSize; x++)
 	{
 		for (int y = 0; y < worldSize; y++)
@@ -51,10 +53,9 @@ void World::createWorld(float seed)
 				log("Creating cube at position: (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")", LogLevel::DEBUG);
 				log("Cube ID: " + std::to_string(cubeID), LogLevel::DEBUG);
 
-				// Create a unique ID for each cube
-				entityCubeVector.emplace_back(EntityCube(cubeID, glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))));
-				// Add the position to the worldShader vertex data cube positions
-				worldShader->vertData.cubePositions.emplace_back(entityCubeVector.back().getEntityPosition());
+				// Create a cube entity at the specified position
+
+				addCube(EntityCube(cubeID, glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))));
 				cubeID++;
 			}
 		}
@@ -65,6 +66,22 @@ void World::updateWorld()
 {
 	// Placeholder for future world update logic
 	//log("World update");
+}
+
+void World::addCube(EntityCube _cube)
+{
+	// Cube ID of -1 is invalid/uninitialized. -1 is a default value for uninisialized cube entities.
+	if (_cube.getEntityID() != -1) 
+	{
+		entityCubeVector.emplace_back(_cube);
+		worldShader->vertData.cubePositions.emplace_back(_cube.getEntityPosition());
+	}
+}
+
+void World::spawnEntityCubeAt(glm::vec3 _pos) 
+{
+	addCube(EntityCube(cubeID, _pos));
+	cubeID++;
 }
 
 World::~World()

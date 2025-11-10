@@ -9,7 +9,7 @@ using::ProgramLogger::log;
 
 
 
-Game3D* myGame3D;
+//Game3D* myGame3D;
 
 void printMaxVertexAttributes()
 {
@@ -21,7 +21,7 @@ void printMaxVertexAttributes()
 
 int main()
 {
-	myGame3D = new Game3D();
+	Game3D* myGame3D = new Game3D();
 	printMaxVertexAttributes();
 	myGame3D->start();
 	myGame3D->stop();

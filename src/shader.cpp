@@ -61,7 +61,13 @@ Shader::Shader(const char* _vertexShaderPath, const char* _fragmentShaderPath)
 
 void Shader::setUp() 
 {
+    // enable depth tesiting
     glEnable(GL_DEPTH_TEST);
+    //enable face culling
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
+
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);

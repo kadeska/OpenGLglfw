@@ -5,7 +5,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../include/Window.hpp"
-//#include "../include/shaderProgram.hpp"
 #include "../include/shader.hpp"
 #include "../include/textureLoader.hpp"
 #include "../include/camera3D.hpp"
@@ -13,8 +12,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../include/stb_image.h"
 
-//#include "../include/vertexData.hpp"
-
+#include "../include/programLogger.hpp"
+using ProgramLogger::log;
 
 
 
@@ -126,7 +125,7 @@ void Window::mainLoop(World* _world)
 
         // input
         // -----
-        processInput(window);
+        processInput(window, _world);
 
         _world->updateWorld();
 
@@ -197,41 +196,43 @@ void Window::terminateWindow()
 
     glfwTerminate();
 }
-//bool paused = false;
-//bool keyPressed = false;
-void Window::processInput(GLFWwindow* Window)
+
+bool paused = false;
+static bool escPrevPressed = false;
+static bool spacePrevPressed = false;
+
+void Window::processInput(GLFWwindow* Window, World* _world)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
+    // ESC key edge detection
+
+    bool escPressed = glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
+    if (escPressed && !escPrevPressed) // Only on transition from not pressed to pressed
     {
-        glfwSetWindowShouldClose(window, true);
-    //    keyPressed = true; // is a key being pressed
-
-    //    while (keyPressed) // while the key is pressed
-    //    {
-    //        if (!paused) // if the game is not paused
-    //        {
-    //            // pause the game
-    //            paused = true;
-				////reset the cursor
-    //            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-				//// set keyPressed to false to exit the loop
-    //            keyPressed = false;
-    //            return;
-    //        }
-    //        else
-    //        {
-    //            paused = false;
-    //            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-				//keyPressed = false;
-    //            return;
-    //        }
-    //        exit;
-    //    }
-        
+        if (!paused)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            paused = true;
+        }
+        else
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            firstMouse = true; // to prevent sudden camera jump
+            paused = false;
+        }
     }
-        
+    escPrevPressed = escPressed; // Update previous state
 
+    // SPACE key edge detection
 
+    bool spacePressed = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
+    if (spacePressed && !spacePrevPressed) // Only on transition from not pressed to pressed
+    {
+        log("Space key pressed");
+        _world->spawnEntityCubeAt(myCamera->camPos);
+    }
+    spacePrevPressed = spacePressed; // Update previous state
+
+    // Movement keys (continuous)
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         myCamera->ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

@@ -50,7 +50,7 @@ public:
 
 private:
 
-	void processInput(GLFWwindow* window);
+	void processInput(GLFWwindow* window, World* _world);
 	void render();
 
 };
