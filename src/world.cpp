@@ -93,15 +93,39 @@ void World::spawnEntityCubeAt(glm::vec3 _pos)
 
 bool World::isPositionOccupied(glm::vec3 _pos)
 {
+	int X1 = static_cast<int>(_pos.x);
+	int Y1 = static_cast<int>(_pos.y);
+	int Z1 = static_cast<int>(_pos.z);
+
+	int X2, Y2, Z2;
+
 	for (EntityCube cube : entityCubeVector) 
 	{
-		if (cube.getEntityPosition() == _pos)
+		X2 = static_cast<int>(cube.getEntityPosition().x);
+		Y2 = static_cast<int>(cube.getEntityPosition().y);
+		Z2 = static_cast<int>(cube.getEntityPosition().z);
+
+		if (X1 == X2 && Y1 == Y2 && Z1 == Z2) 
 		{
 			log("Position is already occupied.");
 			return true;
 		}
+		/*if (cube.getEntityPosition() == _pos)
+		{
+			log("Position is already occupied.");
+			return true;
+		}*/
 	}
 	return false;
+}
+
+
+glm::vec3 World::snapToGrid(glm::vec3& pos) {
+	return glm::vec3(
+		std::round(pos.x),
+		std::round(pos.y),
+		std::round(pos.z)
+	);
 }
 
 World::~World()

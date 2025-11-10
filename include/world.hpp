@@ -39,6 +39,8 @@ public:
 
 	bool isPositionOccupied(glm::vec3 _pos);
 
+	glm::vec3 snapToGrid(glm::vec3& pos);
+
 
 	/*
 	 Destructor to clean up any resources allocated for the world.

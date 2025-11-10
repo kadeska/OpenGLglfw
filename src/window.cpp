@@ -228,7 +228,7 @@ void Window::processInput(GLFWwindow* Window, World* _world)
     if (spacePressed && !spacePrevPressed) // Only on transition from not pressed to pressed
     {
         log("Space key pressed");
-        _world->spawnEntityCubeAt(myCamera->camPos);
+        _world->spawnEntityCubeAt(_world->snapToGrid(myCamera->camPos));
     }
     spacePrevPressed = spacePressed; // Update previous state
 
