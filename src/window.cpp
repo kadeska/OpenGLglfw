@@ -208,23 +208,23 @@ bool paused = false;
 static bool escPrevPressed = false;
 static bool spacePrevPressed = false;
 
-void Window::processInput(GLFWwindow* Window, World* _world)
+void Window::processInput(GLFWwindow* _window, World* _world)
 {
     
 
     // ESC key edge detection
 
-    bool escPressed = glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
+    bool escPressed = glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
     if (escPressed && !escPrevPressed) // Only on transition from not pressed to pressed
     {
         if (!paused)
         {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             paused = true;
         }
         else
         {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 			firstMouse = true; // to prevent sudden camera jump.  // Needs fixing, doesnt work like expected. Maybe store lastX and lastY when pausing?
             paused = false;
         }
@@ -233,7 +233,7 @@ void Window::processInput(GLFWwindow* Window, World* _world)
 
     // SPACE key edge detection
 
-    bool spacePressed = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
+    bool spacePressed = glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS;
     if (spacePressed && !spacePrevPressed) // Only on transition from not pressed to pressed
     {
         log("Space key pressed");
