@@ -45,13 +45,13 @@ public:
 	float camMovementSpeed;
 	float camMouseSensitivity;
 	float camZoomLevel;
-	float collisionRadius = 0.4f;
+	float collisionRadius = 1.0f;
 
 	// physics attributes
 
 	glm::vec3 velocity = glm::vec3(0.0f);
-	bool useGravity = false;
-	float gravity = -0.1f;
+	bool useGravity = true;
+	float gravity = -4.5f;
 	bool onGround = false;
 
 

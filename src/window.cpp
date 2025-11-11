@@ -207,6 +207,7 @@ void Window::terminateWindow()
 bool paused = false;
 static bool escPrevPressed = false;
 static bool spacePrevPressed = false;
+static bool toggleGravityPressed = false;
 
 void Window::processInput(GLFWwindow* _window, World* _world)
 {
@@ -242,6 +243,24 @@ void Window::processInput(GLFWwindow* _window, World* _world)
     }
     spacePrevPressed = spacePressed; // Update previous state
 
+
+    bool toggleGravity = glfwGetKey(_window, GLFW_KEY_G) == GLFW_PRESS;
+    if (toggleGravity && !toggleGravityPressed) 
+    {
+        //log("Gravity toggled");
+        //myCamera->useGravity = true;
+        if (!myCamera->useGravity) 
+        {
+            myCamera->useGravity = true;
+            log("Gravity toggled on");
+        } 
+        else 
+        {
+            myCamera->useGravity = false;
+            log("Gravity toggled off");
+        }
+    }
+    toggleGravityPressed = toggleGravity;
     
 
     // Movement keys (continuous)

@@ -85,7 +85,7 @@ void Camera3D::ProcessMouseScroll(float _yOffset)
 
 void Camera3D::applyGravity(float _deltaTime)
 {
-	if (!useGravity) { return; }
+	if (!useGravity) { velocity.y = 0.0f; return; }
 	if (!onGround) 
 	{
 		velocity.y += gravity * _deltaTime;
