@@ -127,6 +127,13 @@ void Window::mainLoop(World* _world)
         // -----
         processInput(window, _world);
 
+
+		myCamera->applyGravity(deltaTime);
+		myCamera->updatePosition(deltaTime);
+
+		_world->setPlayerPos(myCamera->camPos);
+
+
         _world->updateWorld();
 
         // Rendering commands here
@@ -203,6 +210,8 @@ static bool spacePrevPressed = false;
 
 void Window::processInput(GLFWwindow* Window, World* _world)
 {
+    
+
     // ESC key edge detection
 
     bool escPressed = glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
@@ -216,7 +225,7 @@ void Window::processInput(GLFWwindow* Window, World* _world)
         else
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            firstMouse = true; // to prevent sudden camera jump
+			firstMouse = true; // to prevent sudden camera jump.  // Needs fixing, doesnt work like expected. Maybe store lastX and lastY when pausing?
             paused = false;
         }
     }
@@ -228,19 +237,83 @@ void Window::processInput(GLFWwindow* Window, World* _world)
     if (spacePressed && !spacePrevPressed) // Only on transition from not pressed to pressed
     {
         log("Space key pressed");
-        _world->spawnEntityCubeAt(_world->snapToGrid(myCamera->camPos));
+        //_world->spawnEntityCubeAt(_world->snapToGrid(myCamera->camPos));
+        _world->spawnEntityCubeAt(myCamera->camPos);
     }
     spacePrevPressed = spacePressed; // Update previous state
 
+    
+
+    // Movement keys (continuous)
+    /*if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
+    {
+        myCamera->ProcessKeyboard(FORWARD, deltaTime);
+    }
+        
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
+    {
+        myCamera->ProcessKeyboard(BACKWARD, deltaTime);
+    }
+        
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
+    {
+        myCamera->ProcessKeyboard(LEFT, deltaTime);
+    }
+        
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) 
+    {
+        myCamera->ProcessKeyboard(RIGHT, deltaTime);
+    }*/
+
     // Movement keys (continuous)
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        myCamera->ProcessKeyboard(FORWARD, deltaTime);
+    {
+        float velocity = myCamera->camMovementSpeed * deltaTime;
+        glm::vec3 moveVec = myCamera->camFront * velocity;
+        glm::vec3 intendedPos = myCamera->camPos + moveVec;
+        glm::vec3 checkPos = intendedPos + glm::normalize(myCamera->camFront) * myCamera->collisionRadius;
+        glm::vec3 gridCheckPos = _world->snapToGrid(checkPos);
+        if (!_world->isPositionOccupied(gridCheckPos)) {
+            myCamera->camPos = intendedPos;
+        }
+    }
+
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        myCamera->ProcessKeyboard(BACKWARD, deltaTime);
+    {
+        float velocity = myCamera->camMovementSpeed * deltaTime;
+        glm::vec3 moveVec = -myCamera->camFront * velocity;
+        glm::vec3 intendedPos = myCamera->camPos + moveVec;
+        glm::vec3 checkPos = intendedPos - glm::normalize(myCamera->camFront) * myCamera->collisionRadius;
+        glm::vec3 gridCheckPos = _world->snapToGrid(checkPos);
+        if (!_world->isPositionOccupied(gridCheckPos)) {
+            myCamera->camPos = intendedPos;
+        }
+    }
+
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        myCamera->ProcessKeyboard(LEFT, deltaTime);
+    {
+        float velocity = myCamera->camMovementSpeed * deltaTime;
+        glm::vec3 moveVec = -myCamera->camRight * velocity;
+        glm::vec3 intendedPos = myCamera->camPos + moveVec;
+        glm::vec3 checkPos = intendedPos - glm::normalize(myCamera->camRight) * myCamera->collisionRadius;
+        glm::vec3 gridCheckPos = _world->snapToGrid(checkPos);
+        if (!_world->isPositionOccupied(gridCheckPos)) {
+            myCamera->camPos = intendedPos;
+        }
+    }
+
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        myCamera->ProcessKeyboard(RIGHT, deltaTime);
+    {
+        float velocity = myCamera->camMovementSpeed * deltaTime;
+        glm::vec3 moveVec = myCamera->camRight * velocity;
+        glm::vec3 intendedPos = myCamera->camPos + moveVec;
+        glm::vec3 checkPos = intendedPos + glm::normalize(myCamera->camRight) * myCamera->collisionRadius;
+        glm::vec3 gridCheckPos = _world->snapToGrid(checkPos);
+        if (!_world->isPositionOccupied(gridCheckPos)) {
+            myCamera->camPos = intendedPos;
+        }
+    }
+        
 }
 
 void framebuffer_size_callback(GLFWwindow* Window, int width, int height)

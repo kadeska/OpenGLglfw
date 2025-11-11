@@ -4,9 +4,14 @@
 #include "../include/shader.hpp"
 #include "../include/entity/EntityCube.hpp"
 
+#include "camera3D.hpp"
+
 
 class World
 {
+private:
+	glm::vec3 playerLocation;
+
 public:
 	/*
 	 Default constructor that will initialize the world with default parameters.
@@ -32,6 +37,8 @@ public:
 	// using its parameterized constructor.
 	void addCube(EntityCube _cube);
 
+	void setPlayerPos(glm::vec3 _Playerpos);
+
 	// Spawns a new EnitityCube object at the given location. 
 	// This function will inisialize the EntityCube object with 
 	// a unique ID and use the given _pos value.
@@ -40,6 +47,8 @@ public:
 	bool isPositionOccupied(glm::vec3 _pos);
 
 	glm::vec3 snapToGrid(glm::vec3& pos);
+
+	bool checkPlayerCollisions();
 
 
 	/*

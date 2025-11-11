@@ -1,5 +1,7 @@
 #include "../include/camera3D.hpp"
 
+//#include "world.hpp"
+
 Camera3D::Camera3D(glm::vec3 _pos, glm::vec3 _up, float _yaw, float _pitch) 
 	: camFront(glm::vec3(0.0f, 0.0f, -1.0f)), camMovementSpeed(SPEED), 
 	camMouseSensitivity(SENSITIVITY), camZoomLevel(ZOOM)
@@ -26,18 +28,30 @@ glm::mat4 Camera3D::GetViewMatrix()
 	return glm::lookAt(camPos, camPos + camFront, camUp);
 }
 
-void Camera3D::ProcessKeyboard(Camera_Movement _direction, float _deltaTime)
-{
-	float velocity = camMovementSpeed * _deltaTime;
-	if (_direction == FORWARD)
-		camPos += camFront * velocity;
-	if (_direction == BACKWARD)
-		camPos -= camFront * velocity;
-	if (_direction == LEFT)
-		camPos -= camRight * velocity;
-	if (_direction == RIGHT)
-		camPos += camRight * velocity;
-}
+
+//void Camera3D::ProcessKeyboard(Camera_Movement _direction, float _deltaTime)
+//{
+//	float velocity = camMovementSpeed * _deltaTime;
+//	glm::vec3 moveVec(0.0f);
+//
+//	if (_direction == FORWARD)
+//		moveVec = camFront * velocity;
+//	if (_direction == BACKWARD)
+//		moveVec = -camFront * velocity;
+//	if (_direction == LEFT)
+//		moveVec = -camRight * velocity;
+//	if (_direction == RIGHT)
+//		moveVec = camRight * velocity;
+//
+//	glm::vec3 intendedPos = camPos + moveVec;
+//	glm::vec3 gridIntendedPos = world->snapToGrid(intendedPos);
+//
+//	// Only move if the intended position is not occupied
+//	if (!world->isPositionOccupied(gridIntendedPos)) {
+//		camPos = intendedPos;
+//	}
+//	// else: do nothing, player stays in place
+//}
 
 void Camera3D::ProcessMouseMovement(float _xOffset, float _yOffset, GLboolean constrainPitch)
 {
@@ -67,6 +81,33 @@ void Camera3D::ProcessMouseScroll(float _yOffset)
 		camZoomLevel = 1.0f;
 	if(camZoomLevel > 45.0f)
 		camZoomLevel = 45.0f;
+}
+
+void Camera3D::applyGravity(float _deltaTime)
+{
+	if (!useGravity) { return; }
+	if (!onGround) 
+	{
+		velocity.y += gravity * _deltaTime;
+	}
+	else {
+		velocity.y = 0.0f;
+	}
+}
+
+void Camera3D::updatePosition(float _deltaTime)
+{
+	camPos += velocity * _deltaTime;
+
+	// Simple ground collision at y = 0
+	if (camPos.y <= 0.0f) {
+		camPos.y = 0.0f;
+		onGround = true;
+		velocity.y = 0.0f;
+	}
+	else {
+		onGround = false;
+	}
 }
 
 void Camera3D::updateCameraVectors()

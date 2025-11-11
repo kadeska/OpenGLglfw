@@ -7,6 +7,8 @@
 
 #include <glm/glm.hpp>
 
+
+
 using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 
@@ -55,7 +57,12 @@ void World::createWorld(float seed)
 
 				// Create a cube entity at the specified position
 
-				addCube(EntityCube(cubeID, glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))));
+				//addCube(EntityCube(cubeID, glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))));
+
+				if(y == 0) // only create cubes at ground level for a flat world
+				{
+					addCube(EntityCube(cubeID, glm::vec3(static_cast<float>(x), static_cast<float>(y - 1), static_cast<float>(z))));
+				}
 				cubeID++;
 			}
 		}
@@ -64,8 +71,38 @@ void World::createWorld(float seed)
 
 void World::updateWorld()
 {
-	// Placeholder for future world update logic
-	//log("World update");
+	// check for collisions, entity updates, etc.
+	checkPlayerCollisions();
+}
+
+bool World::checkPlayerCollisions()
+{
+	// if the player is inside of a block, ignor check
+	//if (isPositionOccupied(playerLocation)) { return false; }
+
+
+	glm::vec3 playerPosSnapped = snapToGrid(playerLocation);
+
+	glm::vec3 directions[6] = {
+		glm::vec3(1, 0, 0),  // +X
+		glm::vec3(-1, 0, 0), // -X
+		glm::vec3(0, 1, 0),  // +Y
+		glm::vec3(0, -1, 0), // -Y
+		glm::vec3(0, 0, 1),  // +Z
+		glm::vec3(0, 0, -1)  // -Z
+	};
+
+	for (int i = 0; i < 6; ++i) {
+		glm::vec3 checkPos = playerPosSnapped + directions[i];
+		if (isPositionOccupied(checkPos)) {
+			log("Collision detected at position: (" +
+				std::to_string(checkPos.x) + ", " +
+				std::to_string(checkPos.y) + ", " +
+				std::to_string(checkPos.z) + ")", LogLevel::INFO);
+			return true;
+		}
+	}
+	return false;
 }
 
 void World::addCube(EntityCube _cube)
@@ -82,11 +119,17 @@ void World::addCube(EntityCube _cube)
 	}
 }
 
+void World::setPlayerPos(glm::vec3 _Playerpos)
+{
+	playerLocation = _Playerpos;
+}
+
 void World::spawnEntityCubeAt(glm::vec3 _pos) 
 {
-	if (!isPositionOccupied(_pos))
+	glm::vec3 snappedPos = snapToGrid(_pos);
+	if (!isPositionOccupied(snappedPos))
 	{
-		addCube(EntityCube(cubeID, _pos));
+		addCube(EntityCube(cubeID, snappedPos));
 		cubeID++;
 	}
 }

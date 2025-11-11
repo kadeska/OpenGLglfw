@@ -15,6 +15,11 @@ void BaseEntity::setEntityPosition(glm::vec3 _position)
 	entityPosition = _position;
 }
 
+void BaseEntity::setUseGravity(bool _useGravity)
+{
+	useGravity = _useGravity;
+}
+
 int BaseEntity::getEntityID()
 {
 	return ID;
@@ -28,6 +33,11 @@ std::string BaseEntity::getEntityName()
 glm::vec3 BaseEntity::getEntityPosition()
 {
 	return entityPosition;
+}
+
+bool BaseEntity::getUseGravity()
+{
+	return useGravity;
 }
 
 BaseEntity::BaseEntity()
