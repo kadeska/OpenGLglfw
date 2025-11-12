@@ -72,6 +72,6 @@ void TextureLoader::loadTextures(Shader* _ourShader)
     //glUniform1i(glGetUniformLocation(_ourShader->ID, "texture1"), 0);
     // or set it via the texture class
     _ourShader->setInt("texture1", 0);
-	_ourShader->setInt("texture2", 1);
+	//_ourShader->setInt("texture2", 1);
 
 }
