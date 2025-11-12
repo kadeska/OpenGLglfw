@@ -40,8 +40,8 @@ public:
 
 	GLFWwindow* window;
 	//ShaderProgram* shaderProgram;
-	Shader* ourShader;// = new Shader("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
-	//Shader* textShader;
+	Shader* sceneShader;// = new Shader("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
+	Shader* textShader;
 	//Shader* textShader = new Shader("shaders/textVertexShader.vs", "shaders/textFragmentShader.fs");
 	TextureLoader textureLoader;
 

@@ -54,9 +54,10 @@ void Window::initialize(float _camX, float _camY, float _camZ)
 
 void Window::createShaderProgram()
 {
-	ourShader = new Shader("shaders/textVertexShader.vs", "shaders/textFragmentShader.fs");
+    sceneShader = new Shader("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
+	textShader = new Shader("shaders/textVertexShader.vs", "shaders/textFragmentShader.fs");
     //ourShader->setUp();
-	//textureLoader.loadTextures(ourShader);
+	textureLoader.loadTextures(sceneShader);
 }
 
 void Window::createWindow()
@@ -115,27 +116,27 @@ void Window::mainLoop(World* _world)
         processInput(window, _world);
 
 
-		//myCamera->applyGravity(deltaTime);
-		//myCamera->updatePosition(deltaTime);
+		myCamera->applyGravity(deltaTime);
+		myCamera->updatePosition(deltaTime);
 
-		//_world->setPlayerPos(myCamera->camPos);
+		_world->setPlayerPos(myCamera->camPos);
 
 
-        //_world->updateWorld();
+        _world->updateWorld();
 
         // Rendering commands here
 		// ----------------------
 
         glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClear(GL_COLOR_BUFFER_BIT);
-        //render();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT);
+        render();
 
         TextRenderer textRenderer;
-        textRenderer.renderText("Testing", ourShader, glm::vec3(5.0f, 2.0f, 3.0f), 5.0f, 5.0f, 1.0f,SCR_WIDTH, SCR_HEIGHT , "fonts/arial.ttf");
+        textRenderer.renderText("Testing", textShader, glm::vec3(5.0f, 2.0f, 3.0f), 5.0f, 5.0f, 1.0f,SCR_WIDTH, SCR_HEIGHT , "fonts/arial.ttf");
 
-        //RenderText(textShader, "This is sample text", 2.0f, 2.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-        //RenderText(textShader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+        textRenderer.renderText("This is sample text 1", textShader, glm::vec3(2.0f, 0.0f, 0.0f), 0.0f, 100.5f, 1, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+        textRenderer.renderText("This is sample text 2", textShader, glm::vec3(20.0f, 0.0f, 0.0f), 0.0f, 50.5f, 1, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -152,11 +153,12 @@ void Window::mainLoop(World* _world)
 
 void Window::render() 
 {
+    sceneShader->setUp();
     // clear screen
 	// ------
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Activate and Bind Textures
     glActiveTexture(GL_TEXTURE0);
@@ -165,33 +167,33 @@ void Window::render()
     glBindTexture(GL_TEXTURE_2D, textureLoader.texture2);
 
 	// Use shader program
-	ourShader->use();
+	sceneShader->use();
 
     // pass projection matrix to shader (note that in this case it could change every frame)
     
     glm::mat4 projection = glm::perspective(glm::radians(myCamera->camZoomLevel), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    ourShader->setMat4("projection", projection);
+    sceneShader->setMat4("projection", projection);
 
     // camera/view transformation
 
     glm::mat4 view = myCamera->GetViewMatrix();
-    ourShader->setMat4("view", view);
+    sceneShader->setMat4("view", view);
 
     // render cubes
 	// ------------------------------
 
-    glBindVertexArray(ourShader->VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+    glBindVertexArray(sceneShader->VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // no longer use glDrawElements as we no longer want to use an EBO
     // 
     
-    for (unsigned int i = 0; i < ourShader->vertData.cubePositions.size(); i++) 
+    for (unsigned int i = 0; i < sceneShader->vertData.cubePositions.size(); i++)
     {
         // calculate the model matrix for each object and pass it the shader before drawing
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, ourShader->getCubeAt(i));
+        model = glm::translate(model, sceneShader->getCubeAt(i));
         float angle = 0; // 20.0f * i;
         //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        ourShader->setMat4("model", model);
+        sceneShader->setMat4("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
@@ -217,7 +219,7 @@ void Window::render()
 void Window::terminateWindow()
 {
 	// call deallocateResources from shaderProgram.cpp to free resources
-	ourShader->deallocateResources();
+	textShader->deallocateResources();
 
     glfwTerminate();
 }

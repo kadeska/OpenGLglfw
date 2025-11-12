@@ -26,8 +26,8 @@ Game3D::Game3D()
 	myWindow.createShaderProgram();
 
 	// Create world
-	//myWorld = new World(myWindow.ourShader, WORLD_SEED, WORLD_SIZE);
-	//myWorld->createWorld(0);
+	myWorld = new World(myWindow.sceneShader, WORLD_SEED, WORLD_SIZE);
+	myWorld->createWorld(0);
 }
 
 Game3D::~Game3D()

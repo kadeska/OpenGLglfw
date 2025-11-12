@@ -37,13 +37,14 @@ TextRenderer::~TextRenderer()
 
 int TextRenderer::renderText(std::string _text, Shader* shader, glm::vec3 color, float x, float y, float scale, int _screenWidth, int _screenHeight, std::string _fontFilePath)
 {
-    log("Rendering text");
+    //log("Rendering text");
 
     // OpenGL state
     // ------------
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glFrontFace(GL_CCW);
 
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(_screenWidth), 0.0f, static_cast<float>(_screenHeight));
     shader->use();
