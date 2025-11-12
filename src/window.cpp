@@ -55,8 +55,8 @@ void Window::initialize(float _camX, float _camY, float _camZ)
 void Window::createShaderProgram()
 {
 	ourShader = new Shader("shaders/textVertexShader.vs", "shaders/textFragmentShader.fs");
-    ourShader->setUp();
-	textureLoader.loadTextures(ourShader);
+    //ourShader->setUp();
+	//textureLoader.loadTextures(ourShader);
 }
 
 void Window::createWindow()
