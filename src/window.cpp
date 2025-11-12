@@ -54,7 +54,7 @@ void Window::initialize(float _camX, float _camY, float _camZ)
 
 void Window::createShaderProgram()
 {
-	ourShader = new Shader("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
+	ourShader = new Shader("shaders/textVertexShader.vs", "shaders/textFragmentShader.fs");
     ourShader->setUp();
 	textureLoader.loadTextures(ourShader);
 }
@@ -127,7 +127,8 @@ void Window::mainLoop(World* _world)
 		// ----------------------
 
         glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
         //render();
 
         TextRenderer textRenderer;
