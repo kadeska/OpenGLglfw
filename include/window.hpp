@@ -43,6 +43,7 @@ public:
 	bool escPrevPressed = false;
 	bool spacePrevPressed = false;
 	bool toggleGravityPressed = false;
+	bool spawnInteractablePressed = false;
 
 
 	GLFWwindow* window;
@@ -61,6 +62,7 @@ public:
 	void createWindow();
 	void loadOpenGL();
 	void createShaderProgram();
+	void loadTextures();
 	void mainLoop(World* _world);
 	void terminateWindow();
 

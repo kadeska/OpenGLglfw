@@ -45,7 +45,8 @@ public:
 	float camMovementSpeed;
 	float camMouseSensitivity;
 	float camZoomLevel;
-	float collisionRadius = 1.0f;
+	float collisionRadius = 0.4f;
+	float interactRadius = 1.3f;
 
 	// physics attributes
 

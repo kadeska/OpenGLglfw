@@ -20,6 +20,11 @@ void BaseEntity::setUseGravity(bool _useGravity)
 	useGravity = _useGravity;
 }
 
+void BaseEntity::setIsInteractable(bool _isInteractable)
+{
+	isInteractable = _isInteractable;
+}
+
 int BaseEntity::getEntityID()
 {
 	return ID;
@@ -40,11 +45,17 @@ bool BaseEntity::getUseGravity()
 	return useGravity;
 }
 
+bool BaseEntity::getIsInteractable()
+{
+	return isInteractable;
+}
+
 BaseEntity::BaseEntity()
 {
 	ID = -1;
 	entityPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	entityName = "NULL";
+	isInteractable = false;
 }
 
 

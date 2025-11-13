@@ -197,9 +197,9 @@ glm::vec3 Shader::getCubeAt(int index)
 
 void Shader::deallocateResources()
 {
-    //glDeleteVertexArrays(1, &VAO);
-    //glDeleteBuffers(1, &VBO);
-    //glDeleteBuffers(1, &EBO);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
 }
 
 void Shader::checkCompileErrors(unsigned int shader, std::string type)

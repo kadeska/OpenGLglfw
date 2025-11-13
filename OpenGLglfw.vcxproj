@@ -192,6 +192,12 @@
     <Image Include="textures\gray-tree-bark-1024x1024.jpg" />
     <Image Include="textures\gray-tree-bark-256x256.jpg" />
     <Image Include="textures\gray-tree-bark-32x32.jpg" />
+    <Image Include="textures\gray-tree-bark-64x64.jpg" />
+    <Image Include="textures\old-tiles-128x128.jpg" />
+    <Image Include="textures\old-tiles-16x16.jpg" />
+    <Image Include="textures\old-tiles-256x256.jpg" />
+    <Image Include="textures\old-tiles-32x32.jpg" />
+    <Image Include="textures\old-tiles-64x64.jpg" />
     <Image Include="textures\wall.jpg" />
   </ItemGroup>
   <ItemGroup>

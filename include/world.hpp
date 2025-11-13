@@ -11,6 +11,7 @@ class World
 {
 private:
 	glm::vec3 playerLocation;
+	bool inRangeOfInteractable = false;
 
 public:
 	/*
@@ -40,9 +41,11 @@ public:
 	void setPlayerPos(glm::vec3 _Playerpos);
 
 	// Spawns a new EnitityCube object at the given location. 
-	// This function will inisialize the EntityCube object with 
+	// This function will initialize the EntityCube object with 
 	// a unique ID and use the given _pos value.
 	void spawnEntityCubeAt(glm::vec3 _pos);
+
+	void spawnInteractableAt(glm::vec3 _pos);
 
 	bool isPositionOccupied(glm::vec3 _pos);
 
@@ -50,6 +53,12 @@ public:
 
 	bool checkPlayerCollisions();
 
+
+	glm::vec3 getPlayerPos() { return playerLocation; }
+	bool isInRangeOfInteracable();
+
+
+	bool isInRange(glm::vec3 playerPosition, glm::vec3 entityPosition, float interactRange);
 
 	/*
 	 Destructor to clean up any resources allocated for the world.

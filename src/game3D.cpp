@@ -24,6 +24,7 @@ Game3D::Game3D()
 	myWindow.createWindow();
 	myWindow.loadOpenGL();
 	myWindow.createShaderProgram();
+	myWindow.loadTextures();
 
 	// Create world
 	myWorld = new World(myWindow.sceneShader, WORLD_SEED, WORLD_SIZE);

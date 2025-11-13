@@ -57,7 +57,12 @@ void Window::createShaderProgram()
     sceneShader = new Shader("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
 	textShader = new Shader("shaders/textVertexShader.vs", "shaders/textFragmentShader.fs");
     //ourShader->setUp();
-	textureLoader.loadTextures(sceneShader);
+	//textureLoader.loadTextures(sceneShader);
+}
+
+void Window::loadTextures()
+{
+    textureLoader.loadTextures(sceneShader);
 }
 
 void Window::createWindow()
@@ -136,6 +141,11 @@ void Window::mainLoop(World* _world)
         {
             textRenderer.renderText("Paused", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH/2.0f) - 100, SCR_HEIGHT/2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
         }
+
+        if (_world->isInRangeOfInteracable()) 
+        {
+            textRenderer.renderText("Interact using E", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+        }
         
 
         //textRenderer.renderText("This is sample text 1", textShader, glm::vec3(2.0f, 0.0f, 0.0f), 0.0f, 100.5f, 1, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
@@ -201,6 +211,10 @@ void Window::render()
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
+    // render other object with differant texture
+    //glActiveTexture(GL_TEXTURE1);
+    //glBindTexture(GL_TEXTURE_2D, textureLoader.texture2);
+
 	//glBindVertexArray(0); // no need to unbind it every time
 
 
@@ -255,9 +269,8 @@ void Window::processInput(GLFWwindow* _window, World* _world)
     bool spacePressed = glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS;
     if (spacePressed && !spacePrevPressed) // Only on transition from not pressed to pressed
     {
-        log("Space key pressed");
-        //_world->spawnEntityCubeAt(_world->snapToGrid(myCamera->camPos));
-        _world->spawnEntityCubeAt(myCamera->camPos);
+        //log("Space key pressed");
+        _world->spawnEntityCubeAt(_world->getPlayerPos() + glm::vec3(2.0f, 0.0f, 0.0f));
     }
     spacePrevPressed = spacePressed; // Update previous state
 
@@ -279,6 +292,15 @@ void Window::processInput(GLFWwindow* _window, World* _world)
         }
     }
     toggleGravityPressed = toggleGravity;
+
+
+    bool spawnInteractable = glfwGetKey(_window, GLFW_KEY_C) == GLFW_PRESS;
+    if (spawnInteractable && !spawnInteractablePressed)
+    {
+        
+        _world->spawnInteractableAt(_world->getPlayerPos() + glm::vec3(2.0f, 0.0f, 0.0f));
+    }
+    spawnInteractablePressed = spawnInteractable;
     
 
     // Movement keys (continuous)
