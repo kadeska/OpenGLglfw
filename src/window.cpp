@@ -154,7 +154,7 @@ void Window::mainLoop(World* _world)
             textRenderer.renderText("Paused", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH/2.0f) - 100, SCR_HEIGHT/2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
         }
 
-        if (_world->isInRangeOfInteracable()) 
+        if (_world->getInRangeOfInteracable())
         {
             textRenderer.renderText("Interact using E", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
         }
@@ -253,7 +253,7 @@ void Window::processInput(GLFWwindow* _window, World* _world)
     }
     escPrevPressed = escPressed; // Update previous state
 
-    // SPACE key edge detection
+    // SPACE key edge detection for spawning cube
 
     bool spacePressed = glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS;
     if (spacePressed && !spacePrevPressed) // Only on transition from not pressed to pressed
@@ -263,6 +263,8 @@ void Window::processInput(GLFWwindow* _window, World* _world)
     }
     spacePrevPressed = spacePressed; // Update previous state
 
+
+	// G key edge detection for toggling gravity
 
     bool toggleGravity = glfwGetKey(_window, GLFW_KEY_G) == GLFW_PRESS;
     if (toggleGravity && !toggleGravityPressed) 
@@ -283,6 +285,8 @@ void Window::processInput(GLFWwindow* _window, World* _world)
     toggleGravityPressed = toggleGravity;
 
 
+	// C key edge detection for spawning interactable
+
     bool spawnInteractable = glfwGetKey(_window, GLFW_KEY_C) == GLFW_PRESS;
     if (spawnInteractable && !spawnInteractablePressed)
     {
@@ -292,28 +296,21 @@ void Window::processInput(GLFWwindow* _window, World* _world)
     spawnInteractablePressed = spawnInteractable;
     
 
-    // Movement keys (continuous)
-    /*if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
+    // E key edge detection for interacting with objects
+
+    bool interact = glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS;
+    if (interact && !interactPressed)
     {
-        myCamera->ProcessKeyboard(FORWARD, deltaTime);
+
+        //log("Interacting with object");
+        _world->interactWithObjectInRange();
     }
-        
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
-    {
-        myCamera->ProcessKeyboard(BACKWARD, deltaTime);
-    }
-        
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
-    {
-        myCamera->ProcessKeyboard(LEFT, deltaTime);
-    }
-        
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) 
-    {
-        myCamera->ProcessKeyboard(RIGHT, deltaTime);
-    }*/
+    interactPressed = interact;
+
 
     // Movement keys (continuous)
+    // ------------------------------
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         float velocity = myCamera->camMovementSpeed * deltaTime;

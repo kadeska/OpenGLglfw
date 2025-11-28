@@ -1,7 +1,6 @@
 #include "../include/world.hpp"
 #include "../include/vertexData.hpp"
 #include "../include/worldData.hpp"
-//#include "../include/entity/EntityCube.hpp"
 
 #include "../include/programLogger.hpp"
 
@@ -16,6 +15,8 @@ using ProgramLogger::LogLevel;
 
 
 //bool inRangeOfInteractable = false;
+EntityCube* closestInteractable;
+
 
 std::vector<EntityCube> entityCubeVector = std::vector<EntityCube>();
 int cubeID = 0;
@@ -121,8 +122,9 @@ bool World::checkPlayerCollisions()
 			// check if the player is withen range of an interactable cube
 			if (isInRange(getPlayerPos(), cube.getEntityPosition(), 1.2f))
 			{
-				log("In range of interactable: " + std::to_string(cube.getEntityID()));
+				log("In range of interactable: " + std::to_string(cube.getEntityID()), LogLevel::DEBUG);
 				inRangeOfInteractable = true;
+				closestInteractable = &cube;
 				//return;
 			}
 		}
@@ -141,7 +143,6 @@ void World::addCube(EntityCube _cube)
 			entityCubeVector.push_back(_cube);
 			worldShader->vertData.cubePositions.push_back(_cube.getEntityPosition());
 		}
-		
 	}
 }
 
@@ -213,7 +214,7 @@ bool World::isPositionOccupied(glm::vec3 _pos)
 }
 
 
-bool World::isInRangeOfInteracable()
+bool World::getInRangeOfInteracable()
 {
 	return inRangeOfInteractable;
 }
@@ -224,6 +225,16 @@ bool World::isInRange(glm::vec3 playerPosition, glm::vec3 entityPosition, float 
 
 	// Compare the squared distance to the square of the interaction range to avoid square root
 	return distanceSquared <= (interactRange * interactRange);
+}
+
+void World::interactWithObjectInRange()
+{
+	if (getInRangeOfInteracable() && closestInteractable->getEntityID() != -1)
+	{
+		log("Interacting with object ID: " + std::to_string(closestInteractable->getEntityID()));
+		// Perform interaction logic here
+	}
+	//log("Interacting with object ID: " + std::to_string(closestInteractable->getEntityID()));
 }
 
 glm::vec3 World::snapToGrid(glm::vec3& pos) {

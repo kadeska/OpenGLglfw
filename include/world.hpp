@@ -57,10 +57,14 @@ public:
 	glm::vec3 getPlayerPos() { return playerLocation; }
 
 	// Returns value of inRangeOfInteractable
-	bool isInRangeOfInteracable();
+	bool getInRangeOfInteracable();
 
 	// Checks if the player is within interactRange of the given entityPosition.
 	bool isInRange(glm::vec3 playerPosition, glm::vec3 entityPosition, float interactRange);
+
+	void interactWithObjectInRange();
+
+
 
 	/*
 	 Destructor to clean up any resources allocated for the world.

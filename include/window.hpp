@@ -41,6 +41,7 @@ public:
 	bool spacePrevPressed = false;
 	bool toggleGravityPressed = false;
 	bool spawnInteractablePressed = false;
+	bool interactPressed = false;
 
 
 	GLFWwindow* window;
