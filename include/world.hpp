@@ -11,7 +11,7 @@ class World
 {
 private:
 	glm::vec3 playerLocation;
-	bool inRangeOfInteractable = false;
+	bool inRangeOfInteractable = false; // Maybe this is a culprit??
 
 public:
 	/*

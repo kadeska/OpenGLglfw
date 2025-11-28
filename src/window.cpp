@@ -104,38 +104,55 @@ void Window::loadOpenGL()
 
 void Window::mainLoop(World* _world)
 {
+    sceneShader->setUp();
 
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
-        // --------------------
+        // ----------------------
+        
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
 
         // input
-        // -----
+        // -------------------------
+
         processInput(window, _world);
 
+        // camer stuff
+        // -----------------------------
 
 		myCamera->applyGravity(deltaTime);
 		myCamera->updatePosition(deltaTime);
 
+		// set player position after updating camera position
+        // ----------------------------------
+
 		_world->setPlayerPos(myCamera->camPos);
 
+        // update world
+        // ----------------------------------------
 
         _world->updateWorld();
 
         // Rendering commands here
-		// ----------------------
+		// ----------------------------------------------
 
         glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //glClear(GL_COLOR_BUFFER_BIT);
+
+        // draw 3d scene
+        // ----------------------------------------------------
+
         render();
+
+		// draw text over the scene
+        // --------------------------------------------------------
 
         if (paused) 
         {
@@ -166,12 +183,14 @@ void Window::mainLoop(World* _world)
 
 void Window::render() 
 {
-    sceneShader->setUp();
-    // clear screen
-	// ------
+    // I call these settings every frame as these are important for 3D rendering. 
+    // If I dont do these every frame for the 3D scen then the scen wont be rendered 
+    // correctly because the Text Rendering uses differant settings.
 
-    //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glFrontFace(GL_CW);
+
+    // no need to call setUp every frame. Only need to change the face ordering.
+    //sceneShader->setUp();
 
     // Activate and Bind Textures
     glActiveTexture(GL_TEXTURE0);
@@ -195,9 +214,7 @@ void Window::render()
     // render cubes
 	// ------------------------------
 
-    glBindVertexArray(sceneShader->VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // no longer use glDrawElements as we no longer want to use an EBO
-    // 
+    glBindVertexArray(sceneShader->VAO);
     
     for (unsigned int i = 0; i < sceneShader->vertData.cubePositions.size(); i++)
     {
@@ -210,27 +227,6 @@ void Window::render()
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-
-    // render other object with differant texture
-    //glActiveTexture(GL_TEXTURE1);
-    //glBindTexture(GL_TEXTURE_2D, textureLoader.texture2);
-
-	//glBindVertexArray(0); // no need to unbind it every time
-
-
-
-
-    // render text
-    // -----------------------------
-    
-
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    ////textShader->setInt("text", 0); // Add this before rendering text
-
-    //// src/window.cpp (in render or after rendering 3D objects)
-    //RenderText(textShader, "Hello World", 25.0f, 25.0f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
 }
 
 void Window::terminateWindow()
@@ -240,8 +236,6 @@ void Window::terminateWindow()
 
     glfwTerminate();
 }
-
-
 
 void Window::processInput(GLFWwindow* _window, World* _world)
 {

@@ -9,8 +9,8 @@ private:
 	int ID = -1;
 	std::string entityName = "";
 	glm::vec3 entityPosition;
-	bool useGravity = false;
-	bool isInteractable;
+	bool useGravity = true;
+
 public:
 	BaseEntity();
 
@@ -18,13 +18,13 @@ public:
 	void setEntityName(std::string _name);
 	void setEntityPosition(glm::vec3 _position);
 	void setUseGravity(bool _useGravity);
-	void setIsInteractable(bool _isInteractable);
+	
 
 	int getEntityID();
 	std::string getEntityName();
 	glm::vec3 getEntityPosition();
 	bool getUseGravity();
-	bool getIsInteractable();
+
 
 
 	~BaseEntity();

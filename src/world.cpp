@@ -15,6 +15,8 @@ using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 
 
+//bool inRangeOfInteractable = false;
+
 std::vector<EntityCube> entityCubeVector = std::vector<EntityCube>();
 int cubeID = 0;
 
@@ -95,39 +97,7 @@ bool World::checkPlayerCollisions()
 	};
 
 
-	// check for interactibles 
-
-	for (EntityCube cube : entityCubeVector) 
-	{
-		if (cube.getIsInteractable()) 
-		{
-			//log("Interactable");
-			// check if the player is withen range of an interactable cube
-			if (isInRange(playerLocation, cube.getEntityPosition(), 1.2f))
-			{
-				//log("In range of interactable");
-				//only update the value if its false to save proccessing time
-				if (!inRangeOfInteractable) 
-				{
-					inRangeOfInteractable = true;
-				}
-				
-			}
-			else 
-			{
-				//only update the value if its true to save proccessing time
-				if(inRangeOfInteractable) 
-				{
-					inRangeOfInteractable = false;
-				}
-				
-			}
-		}
-		
-
-	}
-
-
+	
 
 	// check for physical collision here
 
@@ -144,6 +114,36 @@ bool World::checkPlayerCollisions()
 
 
 
+
+	// check for interactibles 
+
+	// the closest interactable entity to the player
+	EntityCube closestInteractable;
+
+	// for each cube in the world (change to be for each interactable entity in the world)
+	for (EntityCube& cube : entityCubeVector) // changed to be a reference to improve performance by avoiding a copy
+	{
+		// if the entity is interactable. (can be removed once I make a vector of interacables)
+		if (cube.getIsInteractable())
+		{
+			//log("Interactable");
+			// check if the player is withen range of an interactable cube
+			if (isInRange(playerLocation, cube.getEntityPosition(), 1.2f))
+			{
+				log("In range of interactable: " + std::to_string(cube.getEntityID()));
+				inRangeOfInteractable = true;
+				//return;
+			}
+			else { inRangeOfInteractable = false; }
+			//else if (!isInRange(playerLocation, cube.getEntityPosition(), 1.2f))
+			//{
+			//	log("Not in range of interactable: " + std::to_string(cube.getEntityID()));
+			//	inRangeOfInteractable = false;
+			//	//return;
+			//}
+		}
+	}
+
 	return false;
 }
 
@@ -154,8 +154,8 @@ void World::addCube(EntityCube _cube)
 	{
 		if (!isPositionOccupied(_cube.getEntityPosition())) 
 		{
-			entityCubeVector.emplace_back(_cube);
-			worldShader->vertData.cubePositions.emplace_back(_cube.getEntityPosition());
+			entityCubeVector.push_back(_cube);
+			worldShader->vertData.cubePositions.push_back(_cube.getEntityPosition());
 		}
 		
 	}
@@ -179,14 +179,23 @@ void World::spawnEntityCubeAt(glm::vec3 _pos)
 
 void World::spawnInteractableAt(glm::vec3 _pos)
 {
-	
 	glm::vec3 snappedPos = snapToGrid(_pos);
 	if (!isPositionOccupied(snappedPos))
 	{
 		log("Spawning interatable");
-		EntityCube interactable(cubeID, snappedPos);
-		interactable.setIsInteractable(true);
-		addCube(interactable);
+		//EntityCube interactable(cubeID, snappedPos);
+		//interactable.setIsInteractable(true);
+		//addCube(interactable);
+		addCube(EntityCube(cubeID, snappedPos));
+
+		for (int i = 0; i < entityCubeVector.size(); i++) 
+		{
+			if (entityCubeVector.at(i).getEntityID() == cubeID)
+			{
+				entityCubeVector.at(i).setIsInteractable(true);
+			}
+		}
+
 		cubeID++;
 	}
 }

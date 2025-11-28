@@ -185,4 +185,6 @@ int TextRenderer::renderText(std::string _text, Shader* shader, glm::vec3 color,
     glBindTexture(GL_TEXTURE_2D, 0);
 
 
+    return 0;
+
 }
