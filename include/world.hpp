@@ -28,8 +28,9 @@ public:
 	World(Shader* _shader, float seed, int _worldSize);
 
 	void createWorld(float seed);
+	void generateWorld(float seed);
 
-	void saveWorld(const char* _filename);
+	void saveWorld(std::string _filename);
 
 	void updateWorld();
 
@@ -48,7 +49,7 @@ public:
 	// a unique ID and use the given _pos value.
 	void spawnEntityCubeAt(glm::vec3 _pos);
 
-	void spawnInteractableAt(glm::vec3 _pos);
+	void spawnChestAt(glm::vec3 _pos);
 
 	bool isPositionOccupied(glm::vec3 _pos);
 

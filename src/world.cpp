@@ -9,9 +9,6 @@
 #include <cmath>
 
 
-
-
-
 using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 
@@ -78,6 +75,29 @@ void World::createWorld(float seed)
 			}
 		}
 	}
+}
+
+void World::generateWorld(float seed)
+{
+	const float baseHeight = 2.0f; // Set a flat base height
+	const float variation = 1.6f;   // Small random variation
+
+	for (int x = 0; x < worldSize; x++) {
+		for (int y = 0; y < worldSize; y++) {
+			// Create a flat terrain with slight variations
+			float height = baseHeight + ((static_cast<float>(rand()) / RAND_MAX) * variation * 2) - variation;
+
+			// Create EntityCube instances up to the generated height
+			for (int z = 0; z < height; z++) {
+				glm::vec3 loc = { static_cast<float>(x), static_cast<float>(z), static_cast<float>(y) };
+				addCube(EntityCube(cubeID++, loc)); // Assume cubeID is defined and incremented elsewhere
+			}
+		}
+	}
+}
+
+void World::saveWorld(std::string _filename)
+{
 }
 
 void World::updateWorld()
@@ -187,7 +207,7 @@ void World::spawnChestAt(glm::vec3 _pos)
 		//interactable.setIsInteractable(true);
 		//addCube(interactable);
 		//addCube(EntityCube(cubeID, snappedPos));
-		EntityChest chest = EntityChest(cubeID, 5, snappedPos, std::to_string(cubeID) + "testChest.txt");
+		EntityChest chest = EntityChest(cubeID, 5, snappedPos, std::to_string(cubeID) + "Chest.txt");
 		chest.generateRandomInventory();
 		chest.saveInventory(chest.getChestInventory());
 		addChest(chest);

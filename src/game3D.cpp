@@ -8,7 +8,7 @@
 Window myWindow;
 World* myWorld;
 
-int WORLD_SIZE = 1;
+int WORLD_SIZE = 24;
 int WORLD_SEED = 0;
 
 float CAM_X = 0.0f;
@@ -28,7 +28,8 @@ Game3D::Game3D()
 
 	// Create world
 	myWorld = new World(myWindow.sceneShader, WORLD_SEED, WORLD_SIZE);
-	myWorld->createWorld(0);
+	//myWorld->createWorld(0);
+	myWorld->generateWorld(WORLD_SEED);
 }
 
 Game3D::~Game3D()
