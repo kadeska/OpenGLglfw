@@ -13,14 +13,18 @@ using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 
 
+static const float INTERACT_RANGE = 1.5f;
+
+
 //bool inRangeOfInteractable = false;
 
-EntityChest* closestChest;
+EntityChest closestChest;
 
+EntityChest newChest;// = EntityChest(-1, 0, glm::vec3(0, 0, 0), "null");
 
 
 // global cube ID counter
-int cubeID = 0;
+int objectID = 0;
 
 
 Shader* worldShader;
@@ -54,10 +58,6 @@ void World::createWorld(float seed)
 		+ " ID = " + std::to_string(worldID)
 		+ " Seed= " + std::to_string(worldSeed)
 	    );
-	//log("test error", LogLevel::ERROR);
-	//log("test warning", LogLevel::WARNING);
-	//log("test info", LogLevel::INFO);
-	//int cubeID = 0;
 	for (int x = 0; x < worldSize; x++)
 	{
 		for (int y = 0; y < worldSize; y++)
@@ -65,7 +65,7 @@ void World::createWorld(float seed)
 			for (int z = 0; z < worldSize; z++)
 			{
 				log("Creating cube at position: (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")", LogLevel::DEBUG);
-				log("Cube ID: " + std::to_string(cubeID), LogLevel::DEBUG);
+				log("Cube ID: " + std::to_string(objectID), LogLevel::DEBUG);
 
 				// Create a cube entity at the specified position
 
@@ -73,9 +73,9 @@ void World::createWorld(float seed)
 
 				if(y == 0) // only create cubes at ground level for a flat world
 				{
-					addCube(EntityCube(cubeID, glm::vec3(static_cast<float>(x), static_cast<float>(y - 1), static_cast<float>(z))));
+					addCube(EntityCube(objectID, glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))));
 				}
-				cubeID++;
+				objectID++;
 			}
 		}
 	}
@@ -94,10 +94,19 @@ void World::generateWorld(float seed)
 			// Create EntityCube instances up to the generated height
 			for (int z = 0; z < height; z++) {
 				glm::vec3 loc = { static_cast<float>(x), static_cast<float>(z), static_cast<float>(y) };
-				addCube(EntityCube(cubeID++, loc)); // Assume cubeID is defined and incremented elsewhere
+				addCube(EntityCube(objectID++, loc)); // Assume cubeID is defined and incremented elsewhere
 			}
 		}
 	}
+	// add some chests
+
+	/*EntityChest chest1 = EntityChest(objectID++, 5, glm::vec3(13.0f, 3.0f, 18.0f), "Chest1.txt");
+	EntityChest chest2 = EntityChest(objectID++, 5, glm::vec3(21.0f, 3.0f, 9.0f), "Chest2.txt");
+
+	addChest(chest1);
+	addChest(chest2);*/
+
+	spawnChestAt(glm::vec3(13.0f, 3.0f, 18.0f));
 }
 
 void World::saveWorld(std::string _filename)
@@ -147,11 +156,11 @@ bool World::checkPlayerCollisions()
 		{
 			//log("Interactable");
 			// check if the player is withen range of an interactable cube
-			if (isInRange(getPlayerPos(), chest.getEntityPosition(), 1.2f))
+			if (isInRange(getPlayerPos(), chest.getEntityPosition(), INTERACT_RANGE))
 			{
 				//log("In range of interactable: " + std::to_string(chest.getEntityID()));
 				inRangeOfInteractable = true;
-				closestChest = &chest;
+				closestChest = chest;
 				//return;
 			}
 		}
@@ -196,8 +205,8 @@ void World::spawnEntityCubeAt(glm::vec3 _pos)
 	if (!isPositionOccupied(snappedPos))
 	{
 		log("Spawning cube");
-		addCube(EntityCube(cubeID, snappedPos));
-		cubeID++;
+		addCube(EntityCube(objectID, snappedPos));
+		objectID++;
 	}
 }
 
@@ -207,24 +216,10 @@ void World::spawnChestAt(glm::vec3 _pos)
 	if (!isPositionOccupied(snappedPos))
 	{
 		log("Spawning chest");
-		//EntityCube interactable(cubeID, snappedPos);
-		//interactable.setIsInteractable(true);
-		//addCube(interactable);
-		//addCube(EntityCube(cubeID, snappedPos));
-		EntityChest chest = EntityChest(cubeID, 5, snappedPos, std::to_string(cubeID) + "Chest.txt");
-		chest.generateRandomInventory();
-		chest.saveInventory(chest.getChestInventory());
-		addChest(chest);
 
-		//for (int i = 0; i < entityChestVector.size(); i++) 
-		//{
-		//	if (entityChestVector.at(i).getEntityID() == cubeID)
-		//	{
-		//		entityChestVector.at(i).setIsInteractable(true);
-		//	}
-		//}
+		addChest(createChestAt(snappedPos, 5));
 
-		cubeID++;
+		objectID++;
 	}
 }
 
@@ -284,13 +279,21 @@ bool World::isInRange(glm::vec3 playerPosition, glm::vec3 entityPosition, float 
 
 void World::interactWithObjectInRange()
 {
-	if (getInRangeOfInteracable() && closestChest->getEntityID() != -1)
+	if (getInRangeOfInteracable() && closestChest.getEntityID() != -1)
 	{
-		log("Interacting with object ID: " + std::to_string(closestChest->getEntityID()));
+		log("Interacting with object ID: " + std::to_string(closestChest.getEntityID()));
 		// Perform interaction logic here
-		closestChest->openInventory();
+		closestChest.toggleInventory();
+		//closestChest.getChestInventory().setShowInv(true);
 	}
 	//log("Interacting with object ID: " + std::to_string(closestInteractable->getEntityID()));
+}
+
+EntityChest& World::createChestAt(glm::vec3 _pos, int _size)
+{
+	newChest = EntityChest(objectID++, _size, _pos, std::to_string(objectID) + ".inventory");
+	newChest.generateRandomInventory();
+	return newChest;
 }
 
 glm::vec3 World::snapToGrid(glm::vec3& pos) {

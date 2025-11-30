@@ -73,7 +73,8 @@ private:
 	/*
 	Renders the 3D scene
 	*/
-	void renderScene(World* _world);
+	void renderScene(World*& _world);
+	void renderTextOverlays(World*& _world);
 
 };
 

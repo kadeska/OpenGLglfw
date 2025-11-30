@@ -1,65 +1,66 @@
 #include "../include/entity/entityChest.hpp"
-#include "../include/programLogger.hpp"
-using ProgramLogger::log;
-using ProgramLogger::LogLevel;
+
 #include "../include/FileManager.hpp"
 using FileManager::saveInventoryToFile;
 using FileManager::readInventoryFromFile;
 
-Inventory::Inventory(int _id, int _size, std::vector<ItemType>& items)
+Inventory::Inventory(int _id, int _size, std::vector<ItemType>& _items)
 {
-	this->inventoryID = _id;
-	this->inventorySize = _size;
-	this->items = items;
-
+	inventoryID = _id;
+	inventorySize = _size;
+	items = _items;
+	setShowInv(false);
 	
 }
 
 EntityChest::EntityChest(int _id, int _size, glm::vec3 _pos, std::string _inventoryFilename)
 {
-	log("creating EntityChest... ");
-	generateEmptyInventory();
-	this->setEntityID(_id);
-	this->setEntityPosition(_pos);
-	this->inventorySize = _size;
-	this->inventoryFilename = _inventoryFilename;
+	log("creating EntityChest...");
+	//generateEmptyInventory();
+	setEntityID(_id);
+	setEntityPosition(_pos);
+	inventorySize = _size;
+	inventoryFilename = _inventoryFilename;
 }
 
 void EntityChest::generateEmptyInventory()
 {
-	log("Creating empty inventory ... ");
+	log("Creating empty inventory for object ID: " + std::to_string(getEntityID()));
 	std::vector<ItemType> items = std::vector<ItemType>{ItemType::EMPTY};
-	chestInventory = Inventory(this->getEntityID(), (int)items.size(), items);
+	chestInventory = Inventory(getEntityID(), (int)items.size(), items);
+	log("Empty inventory created with ID: " + std::to_string(getChestInventory().getInventoryID()));
 }
 
 void EntityChest::generateRandomInventory()
 {
-	log("creating random inventoy ... ");
+	log("creating random inventoy for object ID " + std::to_string(getEntityID()));
 	std::vector<ItemType> items = std::vector<ItemType>
 	{ 
 		ItemType::EMPTY,
 		ItemType::FOOD,
 		ItemType::GOLD
 	};
-	chestInventory = Inventory(this->getEntityID(), (int)items.size(), items);
+	chestInventory = Inventory(getEntityID(), (int)items.size(), items);
+	log("Random inventory created with inventory ID: " + std::to_string(getChestInventory().getInventoryID()));
 }
 
 void EntityChest::generateInventoryFromFile()
 {
-	log("Loading inventory from file ... ");
+	log("Loading inventory from file for object ID: " + std::to_string(getEntityID()));
 	// initialize an empty vector of items (inventory items)
 	std::vector<ItemType> items = std::vector<ItemType>{ItemType::EMPTY};
 	// data to be written from file
 	std::string data;
 	// read inventory file and load to data string
-	readInventoryFromFile(this->inventoryFilename, data);
+	readInventoryFromFile(inventoryFilename, data);
 	// finaly set the chest inventory with the data string that was read from file
-	this->chestInventory = Inventory(this->getEntityID(), (int)items.size(), items);
+	chestInventory = Inventory(getEntityID(), (int)items.size(), items);
+	log("Inventory loaded from file with inventory ID: " + std::to_string(getChestInventory().getInventoryID()));
 }
 
 void EntityChest::setInventorySize(int _size)
 {
-	this->inventorySize = _size;
+	inventorySize = _size;
 }
 
 int EntityChest::getInventorySize()
@@ -71,17 +72,32 @@ int EntityChest::getInventorySize()
 	}
 	return inventorySize;
 }
-
-void EntityChest::openInventory()
+bool toggleInv = false;
+void EntityChest::toggleInventory()
 {
-	for (ItemType item : getChestInventoryItems()) 
+	
+	if(toggleInv)
 	{
-		log("Inventory contents: " + std::to_string((int)item));
+		log("Closing inventory of ID: " + std::to_string(getChestInventory().getInventoryID()));
+		getChestInventory().setShowInv(false);
+		toggleInv = false;
+		return;
+	} else 
+	{
+		log("Opening inventory of ID: " + std::to_string(getChestInventory().getInventoryID()));
+		getChestInventory().setShowInv(true);
+		toggleInv = true;
+		for (ItemType item : getChestInventoryItems())
+		{
+			log("Inventory contents: " + std::to_string((int)item));
+		}
 	}
+	
+	
 }
 
 void EntityChest::saveInventory(Inventory _inventory)
 {
 	std::string data = convertInventoryToString(*&_inventory.getItems());
-	saveInventoryToFile(this->inventoryFilename, data);
+	saveInventoryToFile(inventoryFilename, data);
 }

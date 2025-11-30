@@ -8,12 +8,12 @@
 Window myWindow;
 World* myWorld;
 
-int WORLD_SIZE = 24;
-int WORLD_SEED = 0;
+static const int WORLD_SIZE = 24;
+static const float WORLD_SEED = 0;
 
-float CAM_X = 0.0f;
-float CAM_Y = 10.0f;
-float CAM_Z = 0.0f;
+static const float CAM_X = 0.0f;
+static const float CAM_Y = 10.0f;
+static const float CAM_Z = 0.0f;
 
 
 Game3D::Game3D()

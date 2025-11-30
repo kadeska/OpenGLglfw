@@ -1,6 +1,10 @@
 #pragma once
 #include "entity.hpp"
 
+#include "../include/programLogger.hpp"
+using ProgramLogger::log;
+using ProgramLogger::LogLevel;
+
 #include <string>
 
 enum class ItemType 
@@ -23,12 +27,26 @@ private:
 	int inventoryID;
 	int inventorySize;
 	std::vector<ItemType> items;
+	bool showInventory;
 public:
 	Inventory(int _id, int _size, std::vector<ItemType>& items);
+	Inventory() = default;
 	~Inventory() = default;
 	inline std::vector<ItemType> getItems()
 	{
 		return items;
+	}
+	inline int getInventoryID()
+	{
+		return inventoryID;
+	}
+	// returns whether the inventory should be shown or not
+	bool showInv() { return showInventory; }
+	// toggles the showInventory boolean
+	void setShowInv(bool _showInv) 
+	{
+		showInventory = _showInv;
+		//log("showInventory: " + std::to_string(showInventory));
 	}
 };
 
@@ -36,13 +54,14 @@ class EntityChest : public BaseEntity
 {
 private:
 	std::vector<ItemType> initialInv = { ItemType::EMPTY };
-	Inventory chestInventory = Inventory(-1, 0, initialInv);
+	Inventory chestInventory;// = Inventory(-1, 0, initialInv);
 	std::string inventoryFilename;
 	int inventorySize;
 	int seed;
 	int texID = 2;
 public:
 	bool interactable = true;
+	EntityChest() = default;
 	EntityChest(int _id, int _size, glm::vec3 _pos, std::string _inventoryFilename);
 	~EntityChest() = default;
 
@@ -54,7 +73,7 @@ public:
 
 	int getInventorySize();
 
-	void openInventory();
+	void toggleInventory();
 	void saveInventory(Inventory _inventory);
 
 	inline int getTexID()

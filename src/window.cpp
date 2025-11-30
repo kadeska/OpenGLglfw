@@ -152,15 +152,7 @@ void Window::mainLoop(World* _world)
 		// draw text over the scene
         // --------------------------------------------------------
 
-        if (paused) 
-        {
-            textRenderer.renderText("Paused", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH/2.0f) - 100, SCR_HEIGHT/2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
-        }
-
-        if (_world->getInRangeOfInteracable())
-        {
-            textRenderer.renderText("Interact using E", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
-        }
+        renderTextOverlays(_world);
         
 
         //textRenderer.renderText("This is sample text 1", textShader, glm::vec3(2.0f, 0.0f, 0.0f), 0.0f, 100.5f, 1, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
@@ -179,7 +171,7 @@ void Window::mainLoop(World* _world)
     }
 }
 
-void Window::renderScene(World* _world)
+void Window::renderScene(World*& _world)
 {
     glFrontFace(GL_CW);
 
@@ -222,6 +214,39 @@ void Window::renderScene(World* _world)
         glBindVertexArray(sceneShader->VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+    }
+}
+
+void Window::renderTextOverlays(World*& _world)
+{
+    if (paused)
+    {
+        textRenderer.renderText("Paused", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+    }
+
+    if (_world->getInRangeOfInteracable())
+    {
+        textRenderer.renderText("Interact using E", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+    }
+
+    int index = 10;
+
+    //textRenderer.renderText("Testing1", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+
+    // draw inventory
+    for (EntityChest& chest: _world->getEntityChests()) 
+    {
+        //textRenderer.renderText("Testing2", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+        if (chest.getChestInventory().showInv()) 
+        {
+            //textRenderer.renderText("Testing3", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 150, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+            for (ItemType item: chest.getChestInventoryItems()) 
+            {
+                textRenderer.renderText("Testing4", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 200, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+
+                index += 10;
+            }
+        }
     }
 }
 

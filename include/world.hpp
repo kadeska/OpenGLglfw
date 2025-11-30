@@ -71,6 +71,8 @@ public:
 
 	void interactWithObjectInRange();
 
+	EntityChest& createChestAt(glm::vec3 _pos, int _size);
+
 
 	std::vector<EntityCube> getEntityCubes() { return entityCubeVector; }
 	std::vector<EntityChest> getEntityChests() { return entityChestVector; }
