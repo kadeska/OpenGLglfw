@@ -1,5 +1,6 @@
 #pragma once
 #include "../include/inventory.hpp"
+#include <vector>
 
 /*
  Class: InventoryManager
@@ -13,10 +14,10 @@ private:
 	std::vector<Inventory> inventories;
 
 public:
-	InventoryManager() = default;
+	InventoryManager(const int& _numberOfInventories);
 	~InventoryManager() = default;
 
-	void createEmtpyInventory(int _inventoryID);
-	void deleteInventory(int _inventoryID);
+	void createEmtpyInventory(const int& _inventoryID);
+	void deleteInventory(const int& _inventoryID);
 };
 

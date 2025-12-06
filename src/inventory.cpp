@@ -2,34 +2,33 @@
 #include <algorithm>
 #include "../include/inventory.hpp"
 
-Inventory::Inventory(int _id, int _size)
+Inventory::Inventory(const int& _id, const int& _size)
 {
+	// Inisialize inventory with given ID and size
+
 	inventoryID = _id;
 	inventorySize = _size;
+
+	// Resize inventory array to given size with empty items
+
 	inventoryArray.resize(inventorySize, Item{});
 }
-std::vector<Item> Inventory::getInventoryArray()
+std::vector<Item>& Inventory::getInventoryArray()
 {
 	return inventoryArray;
 }
 
-void Inventory::addItem(ItemType& _item)
+void Inventory::addItem(const Item& _item)
 {
-	// if there is more than one of these items, increase quantity instead of adding new item
-	// if there is not, add new item to inventory array
-	
-	//inventoryArray.emplace_back(_item);
+	inventoryArray.push_back(_item);
 }
 
-void Inventory::removeItem(ItemType& _item)
+void Inventory::removeItem(const Item& _item)
 {
-	// find item with matching type and remove from quantity or remove from inventory array
-	/*auto it = std::find(inventoryArray.begin(), inventoryArray.end(), _item);
-	
-	if (it != inventoryArray.end())
-	{
-		inventoryArray.erase(it);
-	}*/
+	inventoryArray.erase(std::remove_if(inventoryArray.begin(), inventoryArray.end(),
+		[&](const Item& item) {
+			return item.getItemID() == _item.getItemID();
+		}), inventoryArray.end());
 }
 
 int Inventory::getInventoryID()

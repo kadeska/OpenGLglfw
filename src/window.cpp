@@ -249,20 +249,20 @@ void Window::renderTextOverlays(World*& _world)
     //textRenderer.renderText("Testing1", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
 
     // draw inventory
-    for (EntityChest& chest: _world->getEntityChests()) 
-    {
-        //textRenderer.renderText("Testing2", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
-        if (chest.getChestInventory().showInv()) 
-        {
-            //textRenderer.renderText("Testing3", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 150, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
-            for (ItemType item: chest.getChestInventoryItems()) 
-            {
-                textRenderer.renderText("Testing4", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 200, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+    //for (EntityChest& chest: _world->getEntityChests()) 
+    //{
+    //    //textRenderer.renderText("Testing2", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 100, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+    //    if (chest.getChestInventory().canShowInventory()) 
+    //    {
+    //        //textRenderer.renderText("Testing3", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 150, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
+    //        for (Item item: chest.getChestInventoryItems()) 
+    //        {
+    //            textRenderer.renderText("Testing4", textShader, glm::vec3(5.0f, 2.0f, 3.0f), (SCR_WIDTH / 2.0f) - 200, SCR_HEIGHT / 2.0f, 1.0f, SCR_WIDTH, SCR_HEIGHT, "fonts/arial.ttf");
 
-                index += 10;
-            }
-        }
-    }
+    //            index += 10;
+    //        }
+    //    }
+    //}
 }
 
 

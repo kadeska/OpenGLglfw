@@ -3,14 +3,10 @@
 #include <vector>
 
 #include "itemTypes.hpp"
-using ItemType = ItemTypes::ItemType;
+#include "item.hpp"
 
-struct Item
-{
-	unsigned int itemID = -1;
-	ItemType type = ItemType::EMPTY;
-	unsigned int quantity = 0;
-};
+using ItemType = ItemTypes::ItemType;
+//using ItemStruct = Item::_ItemStruct;
 
 class Inventory
 {
@@ -21,14 +17,17 @@ private:
 
 	std::vector<Item> inventoryArray;
 
-public:
 	
-	Inventory(int _id, int _size);
+
+public:
+	Inventory() = default;
+	Inventory(const int& _id, const int& _size);
 	~Inventory() = default;
 
-	std::vector<Item> getInventoryArray();
-	void addItem(ItemType& _item);
-	void removeItem(ItemType& _item);
+	std::vector<Item>& getInventoryArray();
+	// Adds an item struct by ref to the inventory array
+	void addItem(const Item& _item);
+	void removeItem(const Item& _item);
 
 	int getInventoryID();
 

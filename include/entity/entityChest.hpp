@@ -1,17 +1,15 @@
 #pragma once
-#include "entity.hpp"
 
 #include <string>
 
-
-
+#include "entity.hpp"
+#include "../inventory.hpp"
 
 
 class EntityChest : public BaseEntity
 {
 private:
-	std::vector<ItemType> initialInv = { ItemType::EMPTY };
-	Inventory chestInventory;// = Inventory(-1, 0, initialInv);
+	Inventory chestInventory;
 	std::string inventoryFilename;
 	int inventorySize;
 	int seed;
@@ -19,49 +17,29 @@ private:
 public:
 	bool interactable = true;
 	EntityChest() = default;
-	EntityChest(int _id, int _size, glm::vec3 _pos, std::string _inventoryFilename);
+	EntityChest(const int& _id, const int& _size, const glm::vec3& _pos, const std::string& _inventoryFilename);
 	~EntityChest() = default;
 
 	void generateEmptyInventory();
 	void generateRandomInventory();
 	void generateInventoryFromFile();
 
-	void setInventorySize(int _size);
+	void setInventorySize(const int& _size);
 
 	int getInventorySize();
 
 	void toggleInventory();
-	void saveInventory(Inventory _inventory);
+	void saveInventory(Inventory& _inventory);
 
-	inline int getTexID()
-	{
-		return texID;
-	}
+	int getTextureID();
 
-	Inventory& getChestInventory()
-	{
-		return chestInventory;
-	}
-	inline std::vector<ItemType> getChestInventoryItems()
-	{
-		return chestInventory.getItems();
-	}
+	Inventory& getChestInventory();
+	
+	std::vector<Item>& getChestInventoryItems();
 
-	inline void setInteractable(bool _interactable)
-	{
-		interactable = _interactable;
-	}
-	inline bool getInteractable()
-	{
-		return interactable;
-	}
+	void setInteractable(bool _interactable);
 
-	inline std::string convertInventoryToString(std::vector<ItemType>& items)
-	{
-		std::string inventoryData;
-		for (ItemType& item : items) {
-			inventoryData += std::to_string(static_cast<int>(item)) + "\n";
-		}
-		return inventoryData;
-	}
+	bool getInteractable();
+
+	std::string convertInventoryToString(std::vector<ItemType>& items);
 };

@@ -1,13 +1,20 @@
 #include "../include/inventoryManager.hpp"
 #include "../include/inventory.hpp"
 
-int INVENTORY_SIZE = 20;
+const int INVENTORY_SIZE = 20;
 
-void InventoryManager::createEmtpyInventory(int _inventoryID)
+InventoryManager::InventoryManager(const int& _numberOfInventories)
 {
-	inventories.emplace_back(Inventory(_inventoryID, INVENTORY_SIZE));
+	inventories = std::vector<Inventory>(_numberOfInventories);
 }
 
-void InventoryManager::deleteInventory(int _inventoryID)
+void InventoryManager::createEmtpyInventory(const int& _inventoryID)
+{
+	// call our own function for adding to the vector. 
+	// Check if the vector needs to be resized and if so, do it ourselfes. 
+	inventories.emplace_back(_inventoryID, INVENTORY_SIZE);
+}
+
+void InventoryManager::deleteInventory(const int& _inventoryID)
 {
 }

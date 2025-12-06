@@ -285,7 +285,7 @@ void World::interactWithObjectInRange()
 		log("Interacting with object ID: " + std::to_string(closestChest.getEntityID()));
 		// Perform interaction logic here
 		//closestChest.toggleInventory();
-		closestChest.getChestInventory().showInventory = !closestChest.getChestInventory().showInventory;
+		//closestChest.getChestInventory().showInventory = !closestChest.getChestInventory().showInventory;
 		//closestChest.getChestInventory().setShowInv(true);
 	}
 	//log("Interacting with object ID: " + std::to_string(closestInteractable->getEntityID()));
