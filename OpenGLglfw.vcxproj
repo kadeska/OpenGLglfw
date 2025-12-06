@@ -156,6 +156,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\inventory.cpp" />
+    <ClCompile Include="src\inventoryManager.cpp" />
     <ClCompile Include="src\entityChest.cpp" />
     <ClCompile Include="src\camera3D.cpp" />
     <ClCompile Include="src\entity.cpp" />
@@ -178,6 +180,7 @@
     <ClInclude Include="include\FileManager.hpp" />
     <ClInclude Include="include\game3D.hpp" />
     <ClInclude Include="include\fragmentShaderSource.hpp" />
+    <ClInclude Include="include\itemTypes.hpp" />
     <ClInclude Include="include\programLogger.hpp" />
     <ClInclude Include="include\vertexData.hpp" />
     <ClInclude Include="include\vertexShaderSource.hpp" />
@@ -188,6 +191,8 @@
     <ClInclude Include="include\world.hpp" />
     <ClInclude Include="include\worldData.hpp" />
     <ClInclude Include="include\textRenderer.hpp" />
+    <ClInclude Include="include\inventoryManager.hpp" />
+    <ClInclude Include="include\inventory.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\awesomeface.png" />

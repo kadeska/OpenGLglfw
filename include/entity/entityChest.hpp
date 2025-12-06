@@ -3,55 +3,9 @@
 
 #include <string>
 
-enum class ItemType 
-{
-	EMPTY,
-	WOOD,
-	STONE,
-	IRON,
-	GOLD,
-	DIAMOND,
-	FOOD,
-	POTION,
-	WEAPON,
-	ARMOR
-};
 
-class Inventory 
-{
-private:
-	int inventoryID;
-	int inventorySize;
-	std::vector<ItemType> items;
-	
-public:
-	bool showInventory;
-	Inventory(int _id, int _size, std::vector<ItemType>& _items) 
-	{
-		inventoryID = _id;
-		inventorySize = _size;
-		items = _items;
-		//setShowInv(false);
-	}
-	Inventory() = default;
-	~Inventory() = default;
-	std::vector<ItemType> getItems()
-	{
-		return items;
-	}
-	int getInventoryID()
-	{
-		return inventoryID;
-	}
-	// returns whether the inventory should be shown or not
-	bool showInv() { return showInventory; }
-	// toggles the showInventory boolean
-	void setShowInv(bool _showInv) 
-	{
-		showInventory = _showInv;
-		//log("showInventory: " + std::to_string(showInventory));
-	}
-};
+
+
 
 class EntityChest : public BaseEntity
 {

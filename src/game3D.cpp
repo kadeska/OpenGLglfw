@@ -26,7 +26,6 @@ Game3D::Game3D()
 
 	// Create world
 	myWorld = new World(myWindow.getSceneShader(), WORLD_SEED, WORLD_SIZE);
-	//myWorld->createWorld(0);
 	myWorld->generateWorld(WORLD_SEED);
 }
 
