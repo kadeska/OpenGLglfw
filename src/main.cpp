@@ -11,6 +11,9 @@ using::ProgramLogger::LogLevel;
 
 //Game3D* myGame3D;
 
+// Must be called after loading OpenGL functions.
+// In this case, after the window loads OpenGL, 
+// which takes place in the constructor of Game3D.
 void printMaxVertexAttributes()
 {
 	int nrAttributes;
@@ -21,8 +24,6 @@ void printMaxVertexAttributes()
 
 int main(int argc, char* argv[])
 {
-	//loadFreeType();
-
 	Game3D* myGame3D = new Game3D();
 	printMaxVertexAttributes();
 	myGame3D->start();

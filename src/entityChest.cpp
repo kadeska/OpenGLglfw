@@ -1,4 +1,3 @@
-
 #include "../include/entity/entityChest.hpp"
 
 #include "../include/FileManager.hpp"
@@ -8,6 +7,9 @@ using FileManager::readInventoryFromFile;
 #include "../include/programLogger.hpp"
 using ProgramLogger::log;
 using ProgramLogger::LogLevel;
+
+#include "../include/inventoryManager.hpp"
+InventoryManager inventoryManager = InventoryManager(10);
 
 EntityChest::EntityChest(const int& _id, const int& _size, const glm::vec3& _pos, const std::string& _inventoryFilename)
 {
@@ -19,29 +21,27 @@ EntityChest::EntityChest(const int& _id, const int& _size, const glm::vec3& _pos
 	inventoryFilename = _inventoryFilename;
 }
 
-void EntityChest::generateEmptyInventory()
+int EntityChest::generateEmptyInventory()
 {
 	log("Creating empty inventory for object ID: " + std::to_string(getEntityID()));
 	std::vector<ItemType> items = std::vector<ItemType>{ItemType::EMPTY};
 	chestInventory = Inventory(getEntityID(), getInventorySize());
 	log("Empty inventory created with ID: " + std::to_string(getChestInventory().getInventoryID()));
+	return 0;
 }
 
-unsigned int itemIDCounter = 0;
-void EntityChest::generateRandomInventory()
+
+int EntityChest::generateRandomInventory()
 {
 	log("creating random inventoy for object ID " + std::to_string(getEntityID()));
-	std::vector<Item> items = std::vector<Item>
-	{ 
-		Item{itemIDCounter++, ItemType::FOOD},
-		Item{itemIDCounter++, ItemType::GOLD}
-	};
-
-	chestInventory = Inventory(getEntityID(), getInventorySize());
-	log("Random inventory created with inventory ID: " + std::to_string(getChestInventory().getInventoryID()));
+	if (inventoryManager.createRandomInventoy(getEntityID(), chestInventory) == -1) 
+	{
+		log("Something went wrong");
+	}
+	return 0;
 }
 
-void EntityChest::generateInventoryFromFile()
+int EntityChest::generateInventoryFromFile()
 {
 	log("Loading inventory from file for object ID: " + std::to_string(getEntityID()));
 	//// initialize an empty vector of uninisialized items (inventory items)
@@ -53,6 +53,8 @@ void EntityChest::generateInventoryFromFile()
 	//// finaly set the chest inventory with the data string that was read from file
 	//chestInventory = Inventory(getEntityID(), (int)items.size(), items);
 	//log("Inventory loaded from file with inventory ID: " + std::to_string(getChestInventory().getInventoryID()));
+
+	return -1;
 }
 
 void EntityChest::setInventorySize(const int& _size)
@@ -64,7 +66,7 @@ int EntityChest::getInventorySize()
 {
 	if(inventorySize == 0) 
 	{
-		log("Inventory size is zero! Have you initialized it yet?", LogLevel::WARNING);
+		log("Inventory size is zero! Have you initialized it yet?", LogLevel::ERROR);
 		return -1;
 	}
 	return inventorySize;
@@ -105,7 +107,13 @@ Inventory& EntityChest::getChestInventory()
 
 std::vector<Item>& EntityChest::getChestInventoryItems()
 {
-	return chestInventory.getInventoryArray();
+	if (getChestInventory().getInventorySize() == 0) 
+	{
+		log("Inventory size is zero!", LogLevel::ERROR);
+		static std::vector<Item> emptyItems;
+		return emptyItems;
+	}
+	return getChestInventory().getInventoryArray();
 }
 
 void EntityChest::setInteractable(bool _interactable)

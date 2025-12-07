@@ -41,7 +41,7 @@ public:
 	// using its parameterized constructor.
 	void addCube(EntityCube _cube);
 
-	void addChest(EntityChest*& _chest);
+	
 
 	void setPlayerPos(glm::vec3 _Playerpos);
 
@@ -50,7 +50,18 @@ public:
 	// a unique ID and use the given _pos value.
 	void spawnEntityCubeAt(glm::vec3 _pos);
 
+	// Spawns a new EntityChest object at the given position if the location is available. 
+	// Used to spawn a new chest in game. 
 	void spawnChestAt(glm::vec3 _pos);
+
+	// Creates a new EntityChest object at the given position with the specified size.
+	// And returns a pointer to the created EntityChest object. 
+	// Used to create chests when loading a world.
+	EntityChest*& createChestAt(glm::vec3 _pos, int _size);
+
+	// Add given chest entity object to the entityChestVector.
+	// Used to add chests to the array to be rendered. 
+	void addChest(EntityChest*& _chest);
 
 	bool isPositionOccupied(glm::vec3 _pos);
 
@@ -68,8 +79,6 @@ public:
 	bool isInRange(glm::vec3 playerPosition, glm::vec3 entityPosition, float interactRange);
 
 	void interactWithObjectInRange();
-
-	EntityChest* createChestAt(glm::vec3 _pos, int _size);
 
 
 	std::vector<EntityCube> getEntityCubes() { return entityCubeVector; }

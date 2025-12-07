@@ -17,9 +17,9 @@ static const float INTERACT_RANGE = 1.5f;
 
 //bool inRangeOfInteractable = false;
 
-EntityChest closestChest;
-EntityChest* chestPtr;
-EntityChest* newChest;// = EntityChest(-1, 0, glm::vec3(0, 0, 0), "null");
+EntityChest* closestChest;
+EntityChest* chestPtr = nullptr;
+EntityChest* newChest = nullptr;     // = EntityChest(-1, 0, glm::vec3(0, 0, 0), "null");
 
 
 // global cube ID counter
@@ -82,6 +82,7 @@ void World::createWorld(float seed)
 
 void World::generateWorld(float seed)
 {
+	log("Generating world...");
 	const float baseHeight = 2.0f; // Set a flat base height
 	const float variation = 1.6f;   // Small random variation
 
@@ -159,7 +160,7 @@ bool World::checkPlayerCollisions()
 			{
 				//log("In range of interactable: " + std::to_string(chest.getEntityID()));
 				inRangeOfInteractable = true;
-				closestChest = chest;
+				closestChest = &chest;
 				//return;
 			}
 		}
@@ -181,17 +182,7 @@ void World::addCube(EntityCube _cube)
 	}
 }
 
-void World::addChest(EntityChest*& _chest) 
-{
-	if (_chest->getEntityID() != -1)
-	{
-		if (!isPositionOccupied(_chest->getEntityPosition()))
-		{
-			entityChestVector.push_back(*_chest);
-			worldShader->vertData.cubePositions.push_back(_chest->getEntityPosition());
-		}
-	}
-}
+
 
 void World::setPlayerPos(glm::vec3 _Playerpos)
 {
@@ -209,20 +200,7 @@ void World::spawnEntityCubeAt(glm::vec3 _pos)
 	}
 }
 
-void World::spawnChestAt(glm::vec3 _pos)
-{
-	glm::vec3 snappedPos = snapToGrid(_pos);
-	if (!isPositionOccupied(snappedPos))
-	{
-		log("Spawning chest");
 
-		// Fix: Store the pointer in a local variable, then pass the reference to addChest
-		chestPtr = createChestAt(snappedPos, 5);
-		addChest(chestPtr);
-
-		objectID++;
-	}
-}
 
 bool World::isPositionOccupied(glm::vec3 _pos)
 {
@@ -280,21 +258,63 @@ bool World::isInRange(glm::vec3 playerPosition, glm::vec3 entityPosition, float 
 
 void World::interactWithObjectInRange()
 {
-	if (getInRangeOfInteracable() && closestChest.getEntityID() != -1)
+	if (getInRangeOfInteracable() && closestChest->getEntityID() != -1)
 	{
-		log("Interacting with object ID: " + std::to_string(closestChest.getEntityID()));
+		log("Interacting with object ID: " + std::to_string(closestChest->getEntityID()));
 		// Perform interaction logic here
 		//closestChest.toggleInventory();
 		//closestChest.getChestInventory().showInventory = !closestChest.getChestInventory().showInventory;
 		//closestChest.getChestInventory().setShowInv(true);
+
+		log("Chest inventory contents for inventory ID: " + std::to_string(closestChest->getChestInventory().getInventoryID()));
+		for (Item& item : closestChest->getChestInventoryItems()) 
+		{
+			log("Item ID: " + std::to_string(item.getItemID()) + "  Item quantity: " + std::to_string(item.getItemQuantity()));
+			//log();
+			//log("Item type: " + item.getItemType());
+		}
+		closestChest->getChestInventory().addItem(Item{999, ItemType::IRON, 1});
+		closestChest->getChestInventory().addItem(Item{ 888, ItemType::ARMOR, 1 });
 	}
-	//log("Interacting with object ID: " + std::to_string(closestInteractable->getEntityID()));
 }
 
-EntityChest* World::createChestAt(glm::vec3 _pos, int _size)
+void World::spawnChestAt(glm::vec3 _pos)
+{
+	glm::vec3 snappedPos = snapToGrid(_pos);
+	if (!isPositionOccupied(snappedPos))
+	{
+		log("Spawning chest");
+
+		// Fix: Store the pointer in a local variable, then pass the reference to addChest
+		//chestPtr = createChestAt(snappedPos, 5);
+		//addChest(chestPtr);
+		addChest(createChestAt(snappedPos, 3));
+
+		objectID++;
+	}
+}
+
+void World::addChest(EntityChest*& _chest)
+{
+	if (_chest->getEntityID() != -1)
+	{
+		if (!isPositionOccupied(_chest->getEntityPosition()))
+		{
+			entityChestVector.push_back(*_chest);
+			worldShader->vertData.cubePositions.push_back(_chest->getEntityPosition());
+		}
+	}
+}
+
+EntityChest*& World::createChestAt(glm::vec3 _pos, int _size)
 {
 	newChest = new EntityChest(objectID++, _size, _pos, std::to_string(objectID) + "inventory.txt");
-	newChest->generateRandomInventory();
+	if (newChest->generateRandomInventory() == -1) 
+	{
+		log("Can not generate random inventory.", LogLevel::ERROR);
+		return newChest;
+	}
+	
 	return newChest;
 }
 

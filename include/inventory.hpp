@@ -30,6 +30,7 @@ public:
 	void removeItem(const Item& _item);
 
 	int getInventoryID();
+	int getInventorySize();
 
 	// returns whether the inventory should be shown or not
 	bool canShowInventory();

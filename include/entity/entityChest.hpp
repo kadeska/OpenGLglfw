@@ -20,9 +20,9 @@ public:
 	EntityChest(const int& _id, const int& _size, const glm::vec3& _pos, const std::string& _inventoryFilename);
 	~EntityChest() = default;
 
-	void generateEmptyInventory();
-	void generateRandomInventory();
-	void generateInventoryFromFile();
+	int generateEmptyInventory();
+	int generateRandomInventory();
+	int generateInventoryFromFile();
 
 	void setInventorySize(const int& _size);
 
