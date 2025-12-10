@@ -37,7 +37,7 @@ bool EntityChest::openInventory(std::string& _inventoryData)
 		isInvOpen = true;
 		_inventoryData.clear();
 		int slotNumber = 1;
-		
+		invMan->formatInventoryDataForRender(getChestInventoryItems(), _inventoryData);
 		return true;
 	}
 	log("Closing inventory");

@@ -138,13 +138,32 @@ void Window::mainLoop(World* _world)
     ImGui_ImplOpenGL3_Init("#version 330");
 
 
-    
+    // frame time stuff
+    // ------------------
+
+    double previousTime;
+    glfwSetTime(0.0);
+    previousTime = glfwGetTime();
+    int frameCount = 0;
 
     // render loop
     // -----------
     sceneShader->setUp();
     while (!glfwWindowShouldClose(window))
     {
+        // Measure speed
+        double currentTime = glfwGetTime();
+        frameCount++;
+        // If a second has passed.
+        if (currentTime - previousTime >= 1.0)
+        {
+            // Display the frame count here any way you want.
+            log("FPS: " + std::to_string(frameCount));
+
+            frameCount = 0;
+            previousTime = currentTime;
+        }
+
         // per-frame time logic
         // ----------------------
         
