@@ -36,11 +36,20 @@ public:
 	// Deletes the inventory with the specified inventory ID from the inventories vector.
 	void deleteInventory(const int& _inventoryID);
 
+	
+
+	// save the given inventory to file.
+	int saveInventory(Inventory& _inventory, std::string& _fileName);
+
+	void formatInventoryDataForRender(std::vector<Item>& _items, std::string& _outData);
+
+	const char* itemTypeToC_String(ItemType type);
+
+private:
+	// formats the inventory data for saving and sets the referanced string to the formated data. 
+	void formatDataForSave(Inventory& _inventory, std::string& _outData);
 	// Converts the given inventory to a string for saving to a file.
 	// If it fails, returns a string "NULL"
 	std::string convertInventoryToString(Inventory& _inventory);
-
-	// save the given inventory to file.
-	int saveInventory(Inventory& _inventory);
 };
 

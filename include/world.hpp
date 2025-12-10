@@ -11,7 +11,7 @@ class World
 private:
 	EntityChest* closestChest = nullptr;
 	//EntityChest* currentChest = nullptr;
-	EntityChest* chestPtr = nullptr;
+	//EntityChest* chestPtr = nullptr;
 	EntityChest* newChest = nullptr;     // = EntityChest(-1, 0, glm::vec3(0, 0, 0), "null");
 
 	glm::vec3 playerLocation;

@@ -37,8 +37,10 @@ void Inventory::addItem(const Item& _item)
         if (getInventoryArray().at(i).getItemID() == 0)
         {
             // Set the empty item to be the given _item
+            //_item.setSlotPosition(i); // cant do this here, i need to set the slot position after I add it to the array. Because its passed to this function as a const.
             getInventoryArray().at(i) = _item;
             getInventoryArray().at(i).setItemQuantity(1);
+            getInventoryArray().at(i).setSlotPosition(i + 1);
             itemAdded = true;
             /*log("Adding item to inventory...  Item ID: " + std::to_string(_item.getItemID()) 
                 + " Inventory ID: " + std::to_string(getInventoryID()));*/
@@ -67,6 +69,10 @@ void Inventory::addItem(const Item& _item)
 
 void Inventory::removeItem(const Item& _item)
 {
+    // Check if the inventory has more than one of _item, 
+    // if more than one of _item exists than only decrement the quantity.
+    // otherwise remove the item from array.
+
 	inventoryArray.erase(std::remove_if(inventoryArray.begin(), inventoryArray.end(),
 		[&](const Item& item) {
 			return item.getItemID() == _item.getItemID();
@@ -77,17 +83,8 @@ int Inventory::getInventoryID()
 {
 	return inventoryID;
 }
+
 unsigned int Inventory::getInventorySize()
 {
 	return inventorySize;
-}
-bool Inventory::canShowInventory()
-{
-	return showInventory;
-}
-
-void Inventory::setShowInv(bool _showInv)
-{
-	showInventory = _showInv;
-	//log("showInventory: " + std::to_string(showInventory));
 }

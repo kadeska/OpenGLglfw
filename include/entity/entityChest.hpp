@@ -10,9 +10,9 @@
 class EntityChest : public BaseEntity
 {
 private:
+	std::string inventoryFilename;
 	int inventorySize = 0;
 	Inventory chestInventory;
-	std::string inventoryFilename;
 	int seed = 0;
 	int texID = 2;
 public:
@@ -24,7 +24,6 @@ public:
 
 	int getTextureID();
 
-	void toggleInventory();
 	bool openInventory(std::string& _inventoryData);
 	
 	void saveInventory(Inventory& _inventory);
@@ -35,6 +34,4 @@ public:
 
 	void setInteractable(bool _interactable);
 	bool getInteractable();
-
-	const char* itemTypeToC_String(ItemType type);
 };

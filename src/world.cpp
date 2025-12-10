@@ -10,7 +10,7 @@ InventoryManager* inventoryManager = new InventoryManager(10);
 using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 
-static const float INTERACT_RANGE = 1.5f;
+static const float INTERACT_RANGE = 1.6f;
 static const int CHEST_INVENTORY_SIZE = 4;
 
 
@@ -347,13 +347,13 @@ void World::addChest(EntityChest*& _chest)
 
 EntityChest*& World::createChestAt(glm::vec3 _pos, int _size)
 {
-	newChest = new EntityChest(objectID++, _size, _pos, std::to_string(objectID) + "inventory.txt", inventoryManager);
+	newChest = new EntityChest(objectID++, _size, _pos, std::to_string(objectID) + ".inventory", inventoryManager);
 
-	if (newChest->getChestInventory().getInventoryID() == -1)
-	{
-		log("OOPS!! Chest inventory was not initialized.", LogLevel::ERROR);
-		return newChest;
-	}
+	//if (newChest->getChestInventory().getInventoryID() == -1)
+	//{
+	//	log("OOPS!! Chest inventory was not initialized.", LogLevel::ERROR);   // This block of code should never be hit. I think its safe to comment it out.
+	//	return newChest;
+	//}
 	
 	return newChest;
 }

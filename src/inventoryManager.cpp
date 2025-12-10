@@ -88,16 +88,11 @@ std::string InventoryManager::convertInventoryToString(Inventory& _inventory)
 		return "NULL";
 	}
 	std::string data;
-	for (Item item : _inventory.getInventoryArray()) 
-	{
-		data += std::to_string(item.getItemID()) + "," 
-			+ std::to_string(static_cast<int>(item.getItemType())) + "," 
-			+ std::to_string(item.getItemQuantity()) + "\n";
-	}
+	formatDataForSave(_inventory, data);
 	return data;
 }
 
-int InventoryManager::saveInventory(Inventory& _inventory)
+int InventoryManager::saveInventory(Inventory& _inventory, std::string& _fileName)
 {
 	// check that inventory is valid
 	if (_inventory.getInventoryID() == -1) 
@@ -117,7 +112,51 @@ int InventoryManager::saveInventory(Inventory& _inventory)
 	}
 
 	// save the string to file with FileManager
-	std::string filename = std::to_string(_inventory.getInventoryID());
+	//std::string filename = std::to_string(_inventory.getInventoryID());
 
-	return saveInventoryToFile(filename, inventoryData);
+	return saveInventoryToFile(_fileName, inventoryData);
+}
+
+void InventoryManager::formatInventoryDataForRender(std::vector<Item>& _items, std::string& _outData)
+{
+	for (Item& item : _items)
+	{
+		_outData += "Slot: " + std::to_string(item.getSlotPosition()) +
+			", Name: " + item.getItemName() +
+			", Quantity: " + std::to_string(item.getItemQuantity()) +
+			", ID:" + std::to_string(item.getItemID()) +
+			", Type: " + itemTypeToC_String(item.getItemType()) +
+			"\n";
+	}
+}
+
+void InventoryManager::formatDataForSave(Inventory& _inventory, std::string& _outData)
+{
+	for (const Item& item : _inventory.getInventoryArray())
+	{
+		_outData += std::to_string(item.getSlotPosition()) + "," 
+			+ std::to_string(item.getItemID()) + ","
+			+ std::to_string(static_cast<int>(item.getItemType())) + ","
+			+ std::to_string(item.getItemQuantity()) + "\n";
+	}
+}
+
+// Helper function to convert ItemType to c style string
+const char* InventoryManager::itemTypeToC_String(ItemType type)
+{
+	switch (type)
+	{
+	case ItemType::EMPTY: return "EMPTY";
+	case ItemType::WOOD: return "WOOD";
+	case ItemType::STONE: return "STONE";
+	case ItemType::IRON: return "IRON";
+	case ItemType::GOLD: return "GOLD";
+	case ItemType::DIAMOND: return "DIAMOND";
+	case ItemType::FOOD: return "FOOD";
+	case ItemType::POTION: return "POTION";
+	case ItemType::WEAPON: return "WEAPON";
+	case ItemType::ARMOR: return "ARMOR";
+		// Add other cases as needed
+	default: return "UNKNOWN";
+	}
 }

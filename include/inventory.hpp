@@ -13,11 +13,8 @@ class Inventory
 private:
 	int inventoryID = -1;
 	unsigned int inventorySize = 0;
-	bool showInventory = false;
 
 	std::vector<Item> inventoryArray;
-
-	
 
 public:
 	Inventory() = default;
@@ -31,11 +28,5 @@ public:
 
 	int getInventoryID();
 	unsigned int getInventorySize();
-
-	// returns whether the inventory should be shown or not
-	bool canShowInventory();
-
-	void setShowInv(bool _showInv);
-
 
 };
