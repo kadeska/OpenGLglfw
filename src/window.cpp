@@ -30,7 +30,7 @@ TextRenderer textRenderer;
 TextureLoader textureLoader;
 
 // text rendering stuff
-std::string dataToRenderAsText;
+std::string inventoryData;
 
 // camera stuff
 
@@ -243,13 +243,13 @@ void Window::renderScene(World*& _world)
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
     }
-    for (EntityChest& chest : _world->getEntityChests())
+    for (EntityChest*& chest : _world->getEntityChests())
     {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, chest.getTextureID());
-        chest.getTexID();
+        glBindTexture(GL_TEXTURE_2D, chest->getTextureID());
+        chest->getTexID();
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, chest.getEntityPosition());
+        model = glm::translate(model, chest->getEntityPosition());
         sceneShader->setMat4("model", model);
         glBindVertexArray(sceneShader->VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -279,9 +279,9 @@ void Window::renderTextOverlays(World*& _world)
 
 void Window::renderImGuiOverlay(World*& _world)
 {
-    if (_world->showInventory) 
+    if (_world->getShouldRenderInventory())
     {
-        ImVec2 text_size = ImGui::CalcTextSize(dataToRenderAsText.c_str(), nullptr, false, 0.0f);
+        ImVec2 text_size = ImGui::CalcTextSize(inventoryData.c_str(), nullptr, false, 0.0f);
         ImVec2 window_position((SCR_WIDTH * 0.5) - 380, (SCR_HEIGHT * 0.5));
         ImGui::SetNextWindowPos(window_position);
         int line_count = text_size.y / ImGui::GetTextLineHeight();
@@ -289,7 +289,7 @@ void Window::renderImGuiOverlay(World*& _world)
 
         ImGui::Begin("Inventory");
         //ImGui::Text("Camera Position: X: %.2f Y: %.2f Z: %.2f", myCamera->getCamPos().x, myCamera->getCamPos().y, myCamera->getCamPos().z);
-        ImGui::Text(dataToRenderAsText.c_str());
+        ImGui::Text(inventoryData.c_str());
         ImGui::End();
         //ImGui::Render();
         //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -304,7 +304,6 @@ void Window::cleanupImGui()
     ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
-
 
 void Window::terminateWindow()
 {
@@ -394,7 +393,19 @@ void Window::processInput(GLFWwindow*& _window, World*& _world)
     if (interact && !interactPressed)
     {
         //log("Interacting with object");
-        _world->interactWithObjectInRange(dataToRenderAsText);
+        //_world->interactWithObjectInRange(dataToRenderAsText);
+        if (_world->getClosestChest() == nullptr) 
+        {
+            // if the chest is null then just return, dont do anything. Player is not in range of any chest
+            return;
+        }
+
+        _world->getClosestChest()->openInventory(inventoryData);
+
+        /*if (_world->getClosestChest()->openInventory(inventoryData)) 
+        {
+
+        }*/
     }
     interactPressed = interact;
 

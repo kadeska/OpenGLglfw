@@ -45,10 +45,10 @@ int InventoryManager::createRandomInventoy(const int& _inventoryID, Inventory& _
 
 	std::vector<Item> items = std::vector<Item>
 	{
-		Item{itemIDCounter++, ItemType::FOOD},
-		Item{itemIDCounter++, ItemType::GOLD},
-		Item{itemIDCounter++, ItemType::GOLD},
-		Item{itemIDCounter++, ItemType::GOLD}
+		Item{itemIDCounter++, "food", ItemType::FOOD},
+		Item{itemIDCounter++, "gold", ItemType::GOLD},
+		Item{itemIDCounter++, "gold", ItemType::GOLD},
+		Item{itemIDCounter++, "gold", ItemType::GOLD}
 	};
 	
 	_outInventory = Inventory(_inventoryID, _invSize);

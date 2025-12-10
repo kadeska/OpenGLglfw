@@ -16,9 +16,10 @@ private:
 
 	glm::vec3 playerLocation;
 	bool inRangeOfInteractable = false;
+	bool shouldRenderInventory = false;
 
 	std::vector<EntityCube> entityCubeVector;
-	std::vector<EntityChest> entityChestVector;
+	std::vector<EntityChest*> entityChestVector;
 
 	// Creates a new EntityChest object at the given position with the specified size.
 	// And returns a pointer to the created EntityChest object. 
@@ -31,6 +32,8 @@ private:
 
 	void createCube(int x, int y, int z);
 	float getDistance(const glm::vec3& pos1, const glm::vec3& pos2);
+
+	bool checkForClosestInteractable();
 
 public:
 
@@ -87,16 +90,19 @@ public:
 	// Returns value of inRangeOfInteractable
 	bool getInRangeOfInteracable();
 
-	EntityChest*& getClosestChest() { return closestChest; }
+	bool getShouldRenderInventory();
+
+	EntityChest* getClosestChest();
 
 	// Checks if the player is within interactRange of the given entityPosition.
 	bool isInRange(glm::vec3 playerPosition, glm::vec3 entityPosition, float interactRange);
 
-	void interactWithObjectInRange(std::string& _outData);
-
 
 	std::vector<EntityCube> getEntityCubes() { return entityCubeVector; }
-	std::vector<EntityChest> getEntityChests() { return entityChestVector; }
+
+	std::vector<EntityChest*> getEntityChests() {
+		return entityChestVector;
+	}
 
 
 	/*
