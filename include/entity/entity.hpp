@@ -3,6 +3,11 @@
 #include <glm/glm.hpp>
 
 
+#include "../programLogger.hpp"
+
+using ProgramLogger::log;
+using ProgramLogger::LogLevel;
+
 
 class BaseEntity 
 {

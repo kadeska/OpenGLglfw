@@ -4,6 +4,11 @@
 #include "../include/entity/entityCube.hpp"
 #include "../include/entity/entityChest.hpp"
 #include "../include/entity/entityPlayer.hpp"
+
+#include "../include/entity/enemyBase.hpp"
+#include "../include/entity/enemyNormal.hpp"
+
+
 #include "../include/entityManager.hpp"
 
 #include "../include/programLogger.hpp"
@@ -23,7 +28,7 @@ EntityPlayer* player = nullptr;
 
 std::vector<EntityCube*> enitityCubeList = std::vector<EntityCube*>();
 std::vector<EntityChest*> enitityChestList = std::vector<EntityChest*>();
-//std::vector<EntityCube*> enitityCubeList = std::vector<EntityCube*>();
+std::vector<EnemyNormal*> normalEnemyList = std::vector<EnemyNormal*>();
 
 glm::vec3 playerLocation;
 int entityIDcounter = 0;
@@ -32,6 +37,13 @@ EntityManager::EntityManager()
 {
 	log("EntityManager Constructor");
 	inventoryManager = new InventoryManager(10);
+
+	// for testing
+
+	//EnemyBase enemy = EnemyBase();
+	//enemy.init(1, 100.0f, 15.0f, 1.1f, 0.8f);
+	EnemyNormal normalEnemy = EnemyNormal(glm::vec3{5,5,5});
+
 }
 
 void EntityManager::createEntityCube(glm::vec3 _cubeLocation)

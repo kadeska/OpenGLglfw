@@ -156,6 +156,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\enemyBase.cpp" />
+    <ClCompile Include="src\enemyController.cpp" />
+    <ClCompile Include="src\enemyNormal.cpp" />
     <ClCompile Include="src\entityManager.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -182,6 +185,8 @@
     <ClCompile Include="src\textRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\enemyController.hpp" />
+    <ClInclude Include="include\entity\enemyBase.hpp" />
     <ClInclude Include="include\entityManager.hpp" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -192,12 +197,13 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="include\entity\enemyNormal.hpp" />
     <ClInclude Include="include\entity\entityPlayer.hpp" />
     <ClInclude Include="include\entity\entityChest.hpp" />
     <ClInclude Include="include\camera3D.hpp" />
     <ClInclude Include="include\entity\entity.hpp" />
     <ClInclude Include="include\entity\entityCube.hpp" />
-    <ClInclude Include="include\FileManager.hpp" />
+    <ClInclude Include="include\fileManager.hpp" />
     <ClInclude Include="include\game3D.hpp" />
     <ClInclude Include="include\fragmentShaderSource.hpp" />
     <ClInclude Include="include\item.hpp" />

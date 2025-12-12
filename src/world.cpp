@@ -4,6 +4,8 @@
 #include "../include/programLogger.hpp"
 #include "../include/vertexData.hpp"
 #include "../include/entityManager.hpp"
+#include "../include/enemyController.hpp"
+
 #include "../include/world.hpp"
 
 
@@ -34,6 +36,7 @@ World::World(Shader* _shader, float _seed, int _worldSize)
 {
 	init(_shader, _seed, _worldSize);
 	entityManager = new EntityManager();
+	enemyController = new EnemyController(entityManager);
 }
 
 void World::init(Shader* _shader, float _seed, int _worldSize)

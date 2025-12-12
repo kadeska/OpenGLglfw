@@ -87,6 +87,15 @@
     <ClCompile Include="src\entityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\enemyBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\enemyNormal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\enemyController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\window.hpp">
@@ -137,7 +146,7 @@
     <ClInclude Include="include\entity\entityChest.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\FileManager.hpp">
+    <ClInclude Include="include\fileManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\inventoryManager.hpp">
@@ -183,6 +192,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\entityManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entity\enemyBase.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entity\enemyNormal.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\enemyController.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
