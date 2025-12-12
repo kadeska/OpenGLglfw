@@ -39,8 +39,9 @@ void EntityManager::createEntityCube(glm::vec3 _cubeLocation)
 	glm::vec3 snappedPos = snapToGrid(_cubeLocation);
 	if (!isPositionOccupied(snappedPos))
 	{
-		log("Spawning cube");
+		//log("Spawning cube");
 		newCube = new EntityCube(entityIDcounter++, snappedPos);
+		enitityCubeList.push_back(newCube);
 	}
 }
 
@@ -51,6 +52,7 @@ void EntityManager::createEntityChest(glm::vec3 _chestLocation)
 	{
 		log("Spawning chest");
 		newChest = new EntityChest(entityIDcounter++, DEFAULT_INVENTORY_SIZE, snappedPos, std::to_string(entityIDcounter) + inventoryFileExtension, inventoryManager);
+		enitityChestList.push_back(newChest);
 	}
 }
 
