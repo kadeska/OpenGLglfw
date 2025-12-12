@@ -23,6 +23,10 @@ public:
 	std::vector<EntityCube*> getArrayOfCubes();
 	std::vector<EntityChest*> getArrayOfChests();
 
+	EntityCube* getNewCube();
+	EntityChest* getNewChest();
+	EntityPlayer* getPlayer();
+
 
 	// ---------------------------------------------------------------UTILITIES---------------------------------------------------------
 	

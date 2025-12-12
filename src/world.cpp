@@ -44,7 +44,7 @@ void World::init(Shader* _shader, float _seed, int _worldSize)
 }
 
 
-//this is the one im using  // need to add cube to rendering array with worldShader->vertData.cubePositions.push_back(_cube.getEntityPosition());
+//this is the one im using 
 void World::createWorld(float seed)
 {
 	log("Creating World: Size= " + std::to_string(worldSize) 
@@ -58,7 +58,10 @@ void World::createWorld(float seed)
 		for (int y = 0; y < worldSize; y++) {
 			for (int z = 0; z < worldSize; z++) {
 				if (y == 0 || (y < wallHeight && (x == 0 || x == worldSize - 1 || z == 0 || z == worldSize - 1))) {
+					// create a cube for the world vector
 					createCube({x, y, z});
+					//add the entities location to the render vector. 
+					worldShader->vertData.cubePositions.push_back(getEntityManager()->getNewCube()->getEntityPosition());
 				}
 			}
 		}
@@ -200,9 +203,6 @@ void World::setPlayerPos(glm::vec3 _Playerpos)
 {
 	playerPosition = _Playerpos;
 }
-
-// this can be moved to the entityManager class
-
 
 bool World::getInRangeOfInteracable()
 {

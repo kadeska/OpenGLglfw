@@ -39,7 +39,7 @@ void EntityManager::createEntityCube(glm::vec3 _cubeLocation)
 	glm::vec3 snappedPos = snapToGrid(_cubeLocation);
 	if (!isPositionOccupied(snappedPos))
 	{
-		log("Spawning chest");
+		log("Spawning cube");
 		newCube = new EntityCube(entityIDcounter++, snappedPos);
 	}
 }
@@ -60,7 +60,7 @@ void EntityManager::createEntityPlayer(glm::vec3 _playerLocation)
 	glm::vec3 snappedPos = snapToGrid(_playerLocation);
 	if (!isPositionOccupied(snappedPos))
 	{
-		log("Spawning chest");
+		log("Spawning player");
 		player = new EntityPlayer(snappedPos);
 		playerLocation = snappedPos;
 	}
@@ -74,6 +74,21 @@ std::vector<EntityCube*> EntityManager::getArrayOfCubes()
 std::vector<EntityChest*> EntityManager::getArrayOfChests()
 {
 	return enitityChestList;
+}
+
+EntityCube* EntityManager::getNewCube()
+{
+	return newCube;
+}
+
+EntityChest* EntityManager::getNewChest()
+{
+	return newChest;
+}
+
+EntityPlayer* EntityManager::getPlayer()
+{
+	return player;
 }
 
 
