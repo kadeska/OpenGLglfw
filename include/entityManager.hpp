@@ -5,6 +5,7 @@
 #include "entity/entityCube.hpp"
 #include "entity/entityChest.hpp"
 #include "entity/entityPlayer.hpp"
+#include "entity/enemyNormal.hpp"
 
 
 class EntityManager
@@ -18,13 +19,16 @@ public:
 	void createEntityCube(glm::vec3 _cubeLocation);
 	void createEntityChest(glm::vec3 _cubeLocation);
 	void createEntityPlayer(glm::vec3 _cubeLocation);
+	void createNormalEnemy(glm::vec3 _enemyLocation);
 
 
-	std::vector<EntityCube*> getArrayOfCubes();
-	std::vector<EntityChest*> getArrayOfChests();
+	std::vector<EntityCube*>& getArrayOfCubes();
+	std::vector<EntityChest*>& getArrayOfChests();
+	std::vector<EnemyNormal*>& getArrayOfNormalEnemies();
 
 	EntityCube* getNewCube();
 	EntityChest* getNewChest();
+	EnemyNormal* getNewNormalEnemy();
 	EntityPlayer* getPlayer();
 
 

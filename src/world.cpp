@@ -69,6 +69,8 @@ void World::createWorld(float seed)
 			}
 		}
 	}
+
+	//entityManager->createNormalEnemy({5, 5, 5});
 }
 
 void World::generateWorld(float seed)
@@ -122,6 +124,7 @@ void World::saveWorld(std::string _filename)
 
 void World::updateWorld()
 {
+	enemyController->update();
 	// check for collisions, entity updates, etc.
 	checkPlayerCollisions();
 	if (!checkForClosestInteractable()) 

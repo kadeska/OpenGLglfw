@@ -23,6 +23,7 @@ static const int DEFAULT_INVENTORY_SIZE = 3;
 
 EntityCube* newCube = nullptr;
 EntityChest* newChest = nullptr;
+EnemyNormal* newNormalEnemy = nullptr;
 EntityPlayer* player = nullptr;
 
 
@@ -42,7 +43,7 @@ EntityManager::EntityManager()
 
 	//EnemyBase enemy = EnemyBase();
 	//enemy.init(1, 100.0f, 15.0f, 1.1f, 0.8f);
-	EnemyNormal normalEnemy = EnemyNormal(glm::vec3{5,5,5});
+	//EnemyNormal normalEnemy = EnemyNormal(glm::vec3{5,5,5});
 
 }
 
@@ -80,14 +81,31 @@ void EntityManager::createEntityPlayer(glm::vec3 _playerLocation)
 	}
 }
 
-std::vector<EntityCube*> EntityManager::getArrayOfCubes()
+void EntityManager::createNormalEnemy(glm::vec3 _enemyLocation)
+{
+	glm::vec3 snappedPos = snapToGrid(_enemyLocation);
+	if (!isPositionOccupied(snappedPos)) 
+	{
+		log("Creating a normal enemy");
+		newNormalEnemy = new EnemyNormal(snappedPos);
+		newNormalEnemy->setEntityName("zombie");
+		normalEnemyList.push_back(newNormalEnemy);
+	}
+}
+
+std::vector<EntityCube*>& EntityManager::getArrayOfCubes()
 {
 	return enitityCubeList;
 }
 
-std::vector<EntityChest*> EntityManager::getArrayOfChests()
+std::vector<EntityChest*>& EntityManager::getArrayOfChests()
 {
 	return enitityChestList;
+}
+
+std::vector<EnemyNormal*>& EntityManager::getArrayOfNormalEnemies()
+{
+	return normalEnemyList;
 }
 
 EntityCube* EntityManager::getNewCube()
@@ -98,6 +116,11 @@ EntityCube* EntityManager::getNewCube()
 EntityChest* EntityManager::getNewChest()
 {
 	return newChest;
+}
+
+EnemyNormal* EntityManager::getNewNormalEnemy()
+{
+	return newNormalEnemy;
 }
 
 EntityPlayer* EntityManager::getPlayer()
