@@ -16,7 +16,7 @@ public:
 	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
 	~Shader();
 
-	void setUp();
+	//void setUp();
 
 	void use();
 	void setBool(const std::string& name, bool value) const;

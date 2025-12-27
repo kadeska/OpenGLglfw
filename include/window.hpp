@@ -69,7 +69,7 @@ private:
 	/*
 	Renders the 3D scene
 	*/
-	void renderScene(World*& _world);
+	void renderScene(World*& _world, Shader* _shader);
 	void renderTextOverlays(World*& _world);
 	void renderImGuiOverlay(World*& _world);
 

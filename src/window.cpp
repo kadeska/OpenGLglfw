@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/fwd.hpp>
 
-
+#include "../include/model/model.hpp"
 #include "../include/Window.hpp"
 #include "../include/shader.hpp"
 #include "../include/textureLoader.hpp"
@@ -21,9 +21,15 @@ using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 
 
+
+
+
 GLFWwindow* window;
 Shader* sceneShader;
 Shader* textShader;
+
+Model* backpackModel = nullptr;
+
 
 TextRenderer textRenderer;
 
@@ -153,9 +159,18 @@ void Window::mainLoop(World* _world)
     //previousTime = glfwGetTime();
     //int frameCount = 0;
 
+
+	backpackModel = new Model("models/backpack/backpack.obj");
+	//backpackModel = new Model("models/donut/donut.obj");
+	//backpackModel = new Model("models/modeltest/donut_icing6.obj");
+
+
     // render loop
     // -----------
-    sceneShader->setUp();
+    //sceneShader->setUp();
+    glEnable(GL_DEPTH_TEST);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     while (!glfwWindowShouldClose(window))
     {
         // Measure speed
@@ -206,25 +221,27 @@ void Window::mainLoop(World* _world)
         // Rendering commands here
 		// ----------------------------------------------
 
-        glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //glClear(GL_COLOR_BUFFER_BIT);
 
-        imGuiNewFrame();
+        //imGuiNewFrame();
 
         // draw 3d scene
         // ----------------------------------------------------
 
-        renderScene(_world);
+        //backpackModel->Draw(*sceneShader);
+        renderScene(_world, sceneShader);
+		
 
 		// draw text over the scene
         // --------------------------------------------------------
 
-        renderTextOverlays(_world);
+        //renderTextOverlays(_world);
 
         // draw imGui overlay
         // --------------------------------------------------------
-        renderImGuiOverlay(_world);
+        //renderImGuiOverlay(_world);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -237,53 +254,95 @@ void Window::mainLoop(World* _world)
         }
     }
 	cleanupImGui();
+    //glfwTerminate();
 }
 
-void Window::renderScene(World*& _world)
+void Window::renderScene(World*& _world, Shader* _shader)
 {
-    glFrontFace(GL_CW);
+    // per-frame time logic
+        // --------------------
+    //float currentFrame = static_cast<float>(glfwGetTime());
+    //deltaTime = currentFrame - lastFrame;
+    //lastFrame = currentFrame;
 
-	// Use shader program
-	sceneShader->use();
+    // input
+    // -----
+    //processInput(window, _world);
 
-    // pass projection matrix to shader (note that in this case it could change every frame)
-    
+    // render
+    // ------
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // don't forget to enable shader before setting uniforms
+    _shader->use();
+
+    // view/projection transformations
     glm::mat4 projection = glm::perspective(glm::radians(myCamera->getCamZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    sceneShader->setMat4("projection", projection);
-
-    // camera/view transformation
-
     glm::mat4 view = myCamera->GetViewMatrix();
-    sceneShader->setMat4("view", view);
+    _shader->setMat4("projection", projection);
+    _shader->setMat4("view", view);
 
-    glBindVertexArray(sceneShader->VAO);
+    // render the loaded model
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+    _shader->setMat4("model", model);
 
-    // render objects
-	// ------------------------------
-    
-    for (EntityCube* cube : _world->getArrayOfCubes())
-    {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, cube->getTexID()); 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, cube->getEntityPosition()); 
-        sceneShader->setMat4("model", model);
-        glBindVertexArray(sceneShader->VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-    }
-    for (EntityChest* chest : _world->getArrayOfChests())
-    {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, chest->getTextureID());
-        chest->getTexID();
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, chest->getEntityPosition());
-        sceneShader->setMat4("model", model);
-        glBindVertexArray(sceneShader->VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+    backpackModel->Draw(_shader);
 
-    }
+
+    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+    // -------------------------------------------------------------------------------
+    //glfwSwapBuffers(window);
+    //glfwPollEvents();
+
+
+ //   glFrontFace(GL_CW);
+
+	//// Use shader program
+	//sceneShader->use();
+
+ //   // pass projection matrix to shader (note that in this case it could change every frame)
+ //   
+ //   glm::mat4 projection = glm::perspective(glm::radians(myCamera->getCamZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+ //   sceneShader->setMat4("projection", projection);
+
+ //   // camera/view transformation
+
+ //   glm::mat4 view = myCamera->GetViewMatrix();
+ //   sceneShader->setMat4("view", view);
+
+ //   glBindVertexArray(sceneShader->VAO);
+
+ //   // render objects
+	//// ------------------------------
+ //   
+ //   for (EntityCube* cube : _world->getArrayOfCubes())
+ //   {
+ //       glActiveTexture(GL_TEXTURE0);
+ //       glBindTexture(GL_TEXTURE_2D, cube->getTexID()); 
+ //       glm::mat4 model = glm::mat4(1.0f);
+ //       model = glm::translate(model, cube->getEntityPosition()); 
+ //       sceneShader->setMat4("model", model);
+ //       glBindVertexArray(sceneShader->VAO);
+ //       glDrawArrays(GL_TRIANGLES, 0, 36);
+
+ //   }
+ //   for (EntityChest* chest : _world->getArrayOfChests())
+ //   {
+ //       glActiveTexture(GL_TEXTURE0);
+ //       glBindTexture(GL_TEXTURE_2D, chest->getTextureID());
+ //       chest->getTexID();
+ //       glm::mat4 model = glm::mat4(1.0f);
+ //       model = glm::translate(model, chest->getEntityPosition());
+ //       sceneShader->setMat4("model", model);
+ //       glBindVertexArray(sceneShader->VAO);
+ //       glDrawArrays(GL_TRIANGLES, 0, 36);
+
+ //   }
+    //
 }
 
 void Window::renderTextOverlays(World*& _world)
@@ -381,6 +440,9 @@ void Window::processInput(GLFWwindow*& _window, World*& _world)
         }
     }
     escPrevPressed = escPressed; // Update previous state
+
+	// if paused, skip rest of input processing
+    if (paused) { return; }
 
     // SPACE key edge detection for spawning cube
 

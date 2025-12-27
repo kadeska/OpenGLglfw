@@ -8,6 +8,10 @@ using::ProgramLogger::log;
 using::ProgramLogger::LogLevel;
 
 
+//#include <assimp/Importer.hpp>
+//Assimp::Importer importer;
+
+
 
 //Game3D* myGame3D;
 

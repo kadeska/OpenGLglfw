@@ -28,7 +28,7 @@ Game3D::Game3D()
 	myWorld = new World(myWindow.getSceneShader(), WORLD_SEED, WORLD_SIZE);
 	myWorld->createWorld(WORLD_SEED);
 	myWorld->spawnPlayer({PLAYER_X, PLAYER_Y, PLAYER_Z});
-	myWorld->test();
+	//myWorld->test();
 }
 
 Game3D::~Game3D()

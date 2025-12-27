@@ -8,7 +8,8 @@
 
 #include "../include/world.hpp"
 
-
+//#include "../include/model/model.hpp"
+#include <string>
 
 
 using ProgramLogger::log;
@@ -17,6 +18,7 @@ using ProgramLogger::LogLevel;
 static const float INTERACT_RANGE = 1.6f;
 static const int CHEST_INVENTORY_SIZE = 4;
 
+//static const char* backpackModelPath = "models/backpack/backpack.obj";
 
 // global cube ID counter
 int objectID = 0;
@@ -26,6 +28,8 @@ int lastInteractedObjectID = -1;
 bool previouslyInRange = false;
 
 Shader* worldShader;
+
+//Model* backpackModel = new Model(backpackModelPath);;
 
 int worldID = 0;
 float worldSeed = 0.0f;
@@ -63,13 +67,19 @@ void World::createWorld(float seed)
 			for (int z = 0; z < worldSize; z++) {
 				if (y == 0 || (y < wallHeight && (x == 0 || x == worldSize - 1 || z == 0 || z == worldSize - 1))) {
 					// create a cube for the world vector
-					createCube({x, y, z});
+					// createCube({x, y, z});
 					//add the entities location to the render vector. 
-					worldShader->vertData.cubePositions.push_back(getEntityManager()->getNewCube()->getEntityPosition());
+					// worldShader->vertData.cubePositions.push_back(getEntityManager()->getNewCube()->getEntityPosition());
 				}
 			}
 		}
 	}
+
+
+	//backpackModel = 
+
+
+
 }
 
 void World::generateWorld(float seed)
@@ -123,7 +133,10 @@ void World::saveWorld(std::string _filename)
 
 void World::updateWorld()
 {
-	enemyController->update();
+	//backpackModel->Draw(*worldShader);
+
+
+	//enemyController->update();
 	// check for collisions, entity updates, etc.
 	checkPlayerCollisions();
 	if (!checkForClosestInteractable()) 

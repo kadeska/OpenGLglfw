@@ -11,14 +11,11 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
-    std::string geometryCode;
     std::ifstream vShaderFile;
     std::ifstream fShaderFile;
-    std::ifstream gShaderFile;
     // ensure ifstream objects can throw exceptions:
     vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try
     {
         // open files
@@ -34,15 +31,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
         // convert stream into string
         vertexCode = vShaderStream.str();
         fragmentCode = fShaderStream.str();
-        // if geometry shader path is present, also load a geometry shader
-        if (geometryPath != nullptr)
-        {
-            gShaderFile.open(geometryPath);
-            std::stringstream gShaderStream;
-            gShaderStream << gShaderFile.rdbuf();
-            gShaderFile.close();
-            geometryCode = gShaderStream.str();
-        }
     }
     catch (std::ifstream::failure& e)
     {
@@ -62,71 +50,57 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
     checkCompileErrors(fragment, "FRAGMENT");
-    // if geometry shader is given, compile geometry shader
-    unsigned int geometry;
-    if (geometryPath != nullptr)
-    {
-        const char* gShaderCode = geometryCode.c_str();
-        geometry = glCreateShader(GL_GEOMETRY_SHADER);
-        glShaderSource(geometry, 1, &gShaderCode, NULL);
-        glCompileShader(geometry);
-        checkCompileErrors(geometry, "GEOMETRY");
-    }
     // shader Program
     ID = glCreateProgram();
     glAttachShader(ID, vertex);
     glAttachShader(ID, fragment);
-    if (geometryPath != nullptr)
-        glAttachShader(ID, geometry);
     glLinkProgram(ID);
     checkCompileErrors(ID, "PROGRAM");
     // delete the shaders as they're linked into our program now and no longer necessary
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-    if (geometryPath != nullptr)
-        glDeleteShader(geometry);
 }
 
-void Shader::setUp() 
-{
-    // enable depth tesiting
-    glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //enable face culling
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CW);
-
-    //glEnable(GL_CULL_FACE);
-    
-
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    //glGenBuffers(1, &EBO); // no longer using EBO as we use cubes, and this just makes it easier.
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertData.cubeVertexData), vertData.cubeVertexData, GL_STATIC_DRAW);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeVertexData), cubeVertexData, GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // color attribute
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-}
+//void Shader::setUp() 
+//{
+//    // enable depth tesiting
+//    glEnable(GL_DEPTH_TEST);
+//    //glEnable(GL_BLEND);
+//    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    //enable face culling
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+//    glFrontFace(GL_CW);
+//
+//    //glEnable(GL_CULL_FACE);
+//    
+//
+//    //glEnable(GL_BLEND);
+//    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//
+//
+//    glGenVertexArrays(1, &VAO);
+//    glGenBuffers(1, &VBO);
+//    //glGenBuffers(1, &EBO); // no longer using EBO as we use cubes, and this just makes it easier.
+//
+//    glBindVertexArray(VAO);
+//
+//    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//    glBufferData(GL_ARRAY_BUFFER, sizeof(vertData.cubeVertexData), vertData.cubeVertexData, GL_STATIC_DRAW);
+//
+//    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeVertexData), cubeVertexData, GL_STATIC_DRAW);
+//
+//    // position attribute
+//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+//    glEnableVertexAttribArray(0);
+//    // color attribute
+//    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+//    //glEnableVertexAttribArray(1);
+//    // texture coord attribute
+//    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+//    glEnableVertexAttribArray(1);
+//}
 
 // activate the shader
     // ------------------------------------------------------------------------
