@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\misc\stbimage.cpp" />
     <ClCompile Include="src\model\mesh\mesh.cpp" />
     <ClCompile Include="src\hostile\enemyBase.cpp" />
     <ClCompile Include="src\hostile\enemyController.cpp" />
@@ -183,8 +184,8 @@
     <ClCompile Include="src\misc\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\misc\vertexData.cpp" />
+    <ClCompile Include="src\window\input\inputManager.cpp" />
     <ClCompile Include="src\window\window.cpp" />
-    <ClCompile Include="src\loader\textureLoader.cpp" />
     <ClCompile Include="src\world\world.cpp" />
     <ClCompile Include="src\render\textRenderer.cpp" />
   </ItemGroup>
@@ -216,10 +217,10 @@
     <ClInclude Include="src\misc\programLogger.hpp" />
     <ClInclude Include="src\misc\vertexData.hpp" />
     <ClInclude Include="src\render\sceneRenderer.hpp" />
+    <ClInclude Include="src\window\input\inputManager.hpp" />
     <ClInclude Include="src\window\window.hpp" />
     <ClInclude Include="src\misc\stb_image.h" />
     <ClInclude Include="src\shader\shader.hpp" />
-    <ClInclude Include="src\loader\textureLoader.hpp" />
     <ClInclude Include="src\world\world.hpp" />
     <ClInclude Include="src\world\worldData.hpp" />
     <ClInclude Include="src\render\textRenderer.hpp" />

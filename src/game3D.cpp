@@ -2,6 +2,7 @@
 #include "window/window.hpp"
 #include "world/world.hpp"
 
+//#include "window/input/inputManager.hpp"
 
 #include "misc/programLogger.hpp"
 using ProgramLogger::log;
@@ -25,12 +26,17 @@ Game3D::Game3D()
 	log("Game3D Constructor", LogLevel::DEBUG);
 
 	// since window has no constructor, we don't need to instantiate it
-    //myWindow = Window();
+    myWindow = new Window();
+	
 	myWindow->initialize(PLAYER_X, PLAYER_Y, PLAYER_Z);
 	myWindow->createWindow();
-	myWindow->loadOpenGL();
-	myWindow->createShaderProgram();
-	myWindow->loadTextures();
+	//myWindow->loadOpenGL();
+	
+	//myWindow->initSceneRenderer();
+	
+	
+	//myWindow->createShaderProgram();
+	//myWindow->loadTextures();
 
 	// Create world
 	//myWorld = new World(myWindow->getSceneShader(), WORLD_SEED, WORLD_SIZE);

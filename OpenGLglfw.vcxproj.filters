@@ -30,9 +30,6 @@
     <ClCompile Include="src\shader\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\loader\textureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\camera\camera3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -105,6 +102,12 @@
     <ClCompile Include="src\render\sceneRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\window\input\inputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\misc\stbimage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\window\window.hpp">
@@ -120,9 +123,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\shader\shader.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\loader\textureLoader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\camera\camera3D.hpp">
@@ -213,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\render\sceneRenderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\window\input\inputManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

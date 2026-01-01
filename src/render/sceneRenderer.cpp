@@ -11,6 +11,11 @@
 
 #include "sceneRenderer.hpp"
 
+#include "../misc/programLogger.hpp"
+using ProgramLogger::log;
+using ProgramLogger::LogLevel;
+using LogLevel::DEBUG;
+
 
 
 // the vector of models to use for rendering each gameObject.
@@ -51,11 +56,17 @@ std::vector<glm::vec3> donutPositions = {
 
 SceneRenderer::SceneRenderer(unsigned int w, unsigned int h)
 {
+    log("SceneRenderer constructor", DEBUG);
+
     sceneWidth = w;
     sceneHeight = h;
 
+    log("Loading models", DEBUG);
+
     models.push_back(std::make_unique<Model>("models/backpack/backpack.obj"));
     models.push_back(std::make_unique<Model>("models/donut/donut.obj"));
+
+    log("Creating camera", DEBUG);
 
     camera = std::make_unique<Camera3D>(
         glm::vec3(0.0f, 2.0f, 10.0f),
@@ -64,10 +75,14 @@ SceneRenderer::SceneRenderer(unsigned int w, unsigned int h)
         0.0f
     );
 
+    log("Creating Scene Shader", DEBUG);
+
     sceneShader = std::make_unique<Shader>(
         "shaders/vertexShader.vs",
         "shaders/fragmentShader.fs"
     );
+
+    log("Populating renderables", DEBUG);
 
     // Populate renderables
     for (const glm::vec3& pos : backpackPositions)
@@ -84,10 +99,16 @@ SceneRenderer::SceneRenderer(unsigned int w, unsigned int h)
 
 void SceneRenderer::RenderScene()
 {
+    // clear color
+
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // use scene shader
+
     sceneShader->use();
+
+    // set projection matrix
 
     glm::mat4 projection = glm::perspective(
         glm::radians(camera->getCamZoom()),
@@ -96,11 +117,14 @@ void SceneRenderer::RenderScene()
         100.0f
     );
 
+    // set view matrix
+
     glm::mat4 view = camera->GetViewMatrix();
     sceneShader->setMat4("projection", projection);
     sceneShader->setMat4("view", view);
 
-    // Draw multiple models
+    // Draw models
+
     for (const Renderable& r : renderables) {
         sceneShader->setMat4("model", r.transform);
         r.model->Draw(*sceneShader);

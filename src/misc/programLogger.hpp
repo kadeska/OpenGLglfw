@@ -9,7 +9,6 @@
 #include <iostream>
 
 
-
 /**
  *  The color sequences are composed of sequences of numbers separated
        by semicolons. The most common codes are:
