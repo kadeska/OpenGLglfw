@@ -36,6 +36,7 @@ static void onExitLoading()
 
 Game3D::Game3D()
 {
+	log("Game3D Constructor_2", LogLevel::DEBUG);
 	myWindow = new Window(gameStateManager);
 	loadingScreenRenderer = new LoadingScreenRenderer(myWindow);
 
@@ -48,48 +49,24 @@ Game3D::Game3D()
 	gameStateManager.onExit(StateManager::GameState::LOADING, onExitLoading);
 
 	gameStateManager.setState(StateManager::GameState::LOADING);
+	// start loading game data and once finished, switch to PLAYING state
 }
 
 Game3D::~Game3D()
 {
+	log("Game3D Destructor", LogLevel::DEBUG);
+	delete myWindow;
+	delete myWorld;
 }
-
-//void Game3D::renderLoadingScreenCallback()
-//{
-//	log("Render Loading Screen Callback");
-//	if (!loadingScreenRenderer) 
-//	{
-//		log("Initializing loadingScreenRenderer...");
-//		loadingScreenRenderer = new LoadingScreenRenderer(myWindow);
-//		return;
-//	}
-//	loadingScreenRenderer->renderLoadingScreen();
-//	// After loading is done, create the world
-//	log("Done loading game data...");
-//	gameStateManager.setState(StateManager::GameState::PLAYING); // Now valid, as static
-//	//glfwTerminate();
-//}
-
 
 LoadingScreenRenderer* Game3D::getLoadingScreenRenderer()
 {
 	return loadingScreenRenderer;
 }
 
-bool Game3D::initializeGameWindow()
-{
-	log("Game3D Constructor_2", LogLevel::DEBUG);
-	myWindow = new Window(gameStateManager);
-
-	myWindow->initialize(PLAYER_X, PLAYER_Y, PLAYER_Z);
-	myWindow->createWindow();
-
-	return true;
-}
-
 void Game3D::start()
 {
-	myWindow->mainLoop(myWorld);
+	myWindow->mainLoop();
 }
 
 void Game3D::stop()

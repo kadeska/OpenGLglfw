@@ -211,7 +211,7 @@
     <ClInclude Include="src\camera\camera3D.hpp" />
     <ClInclude Include="src\entity\entity.hpp" />
     <ClInclude Include="src\entity\entityCube.hpp" />
-    <ClInclude Include="src\misc\fileManager.hpp" />
+    <ClInclude Include="src\utils\fileManager.hpp" />
     <ClInclude Include="src\game3D.hpp" />
     <ClInclude Include="src\inventory\item\item.hpp" />
     <ClInclude Include="src\inventory\item\itemTypes.hpp" />

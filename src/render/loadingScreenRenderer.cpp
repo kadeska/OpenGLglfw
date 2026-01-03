@@ -20,10 +20,19 @@ void LoadingScreenRenderer::init()
     log("Initializing shader and text renderer...", LogLevel::DEBUG);
     shader = new Shader("shaders/textVertexShader.vs", "shaders/textFragmentShader.fs");
     textRenderer = new TextRenderer();
+    if (!textRenderer->init(path, shader, window->getWindowSize().x, window->getWindowSize().y)) 
+    {
+        log("Failed to initialize textRenderer", LogLevel::ERROR);
+    }
 }
 
 void LoadingScreenRenderer::render()
 {
     //log("render text", LogLevel::DEBUG);
-    textRenderer->renderText(text, shader, color, window->getScreenWidth() / 2 - 80, window->getScreenHeight() / 2, 1.0f, window->getScreenWidth(), window->getScreenHeight(), path);
+    textRenderer->renderText(text, color, window->getWindowSize().x / 2 - 80, window->getWindowSize().y / 2, 1.0f);
+}
+
+void LoadingScreenRenderer::cleanup()
+{
+    textRenderer->~TextRenderer();
 }

@@ -9,6 +9,13 @@
 #include "../misc/programLogger.hpp"
 #include "../misc/stateManager.hpp"
 
+
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
+
+
+
 using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 using namespace StateManager;
@@ -27,24 +34,69 @@ namespace {
         glViewport(0, 0, width, height);
     }
 
+    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+        if (ImGui::GetIO().WantCaptureKeyboard)
+            return;
+
+        if (ImGui::GetIO().WantCaptureKeyboard)
+            return;
+
+        // Your game input handling
+    }
+
+
     void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
         if (!window) return;
 
-        // Retrieve InputManager from window user pointer
+        ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
+        if (ImGui::GetIO().WantCaptureMouse)
+            return;
+
         auto* inputManager = static_cast<InputManager*>(glfwGetWindowUserPointer(window));
-        if (inputManager /*&& gameState.is(GameState::PLAYING)*/)
+        if (inputManager && !ImGui::GetIO().WantCaptureMouse)
             inputManager->processMouseMovement(xpos, ypos);
     }
 
-    void scroll_callback(GLFWwindow* window, double /*xoffset*/, double yoffset)
+
+    void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
-        if (!window) return;
+        ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+
+        if (ImGui::GetIO().WantCaptureMouse)
+            return;
 
         auto* inputManager = static_cast<InputManager*>(glfwGetWindowUserPointer(window));
-        if (inputManager /*&& gameState.is(GameState::PLAYING)*/)
+        if (inputManager)
             inputManager->processMouseScroll(yoffset);
     }
+
+
+    void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+    {
+        ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+        if (ImGui::GetIO().WantCaptureMouse)
+            return;
+
+        if (ImGui::GetIO().WantCaptureMouse)
+            return;
+
+        // Your input logic here
+    }
+
+
+    //void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+    //{
+    //    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    //    {
+    //        double xpos, ypos;
+    //        //getting cursor position
+    //        glfwGetCursorPos(window, &xpos, &ypos);
+    //        std::cout << "Cursor Position at (" << xpos << " : " << ypos << std::endl;
+    //    }
+    //}
 
 } // namespace
 
@@ -115,9 +167,14 @@ void Window::createWindow()
     glfwSetFramebufferSizeCallback(window.get(), framebuffer_size_callback);
     glfwSetCursorPosCallback(window.get(), mouse_callback);
     glfwSetScrollCallback(window.get(), scroll_callback);
+    glfwSetMouseButtonCallback(window.get(), mouse_button_callback);
+    glfwSetKeyCallback(window.get(), key_callback);
+
 
     //// 6. Set cursor input mode
     glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+    initImGui();
 
     //log("Window created and callbacks set", LogLevel::DEBUG);
     log("Window created", LogLevel::DEBUG);
@@ -135,29 +192,15 @@ void Window::loadOpenGL()
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 }
 
-void Window::imGuiNewFrame()
-{
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-}
-
-void Window::createShaderProgram()
-{
-    log("CreateShaderProgram is no longer needed", LogLevel::WARNING);
-}
-
-void Window::loadTextures()
-{
-    log("loadTextures is no longer needed", LogLevel::WARNING);
-}
-
-void Window::mainLoop(World* world)
+void Window::mainLoop()
 {
     if (!loadingRenderer) 
     {
         log("loadingRenderer is null", LogLevel::ERROR);
     }
+
+    
+
     while (!glfwWindowShouldClose(getGLFWwindow())) {
         clearColor();
         //log("Game state is: " + std::to_string(static_cast<int>(gameState.getState())), LogLevel::DEBUG);
@@ -166,7 +209,9 @@ void Window::mainLoop(World* world)
 
         case GameState::LOADING:
             //log("GameState is LOADING", LogLevel::DEBUG);
+            
             loadingRenderer->render();
+            
             break;
 
         case GameState::PLAYING:
@@ -176,8 +221,12 @@ void Window::mainLoop(World* world)
             break;
         }
 
+
+        pollEvents();        // Input first
+        startImGuiFrame();  // Then build ImGui
+        renderImGui();      // Then render ImGui
         swapBuffers();
-        pollEvents();
+
 
         // Fake loading completion for now
         //if (gameState.is(GameState::LOADING)) {
@@ -191,13 +240,6 @@ void Window::mainLoop(World* world)
     }
 }
 
-void Window::cleanupImGui()
-{
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-}
-
 void Window::setLoadingRenderer(LoadingScreenRenderer* _renderer)
 {
     loadingRenderer = _renderer;
@@ -205,6 +247,7 @@ void Window::setLoadingRenderer(LoadingScreenRenderer* _renderer)
 
 void Window::terminateWindow()
 {
+    loadingRenderer->cleanup();
     glfwTerminate();
 }
 
@@ -230,4 +273,50 @@ void Window::processInput(World* _world)
 
 	inputManager->checkESCToggle();
     inputManager->processInput(deltaTime);
+}
+
+void Window::initImGui()
+{
+    // Create ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // enable keyboard controls
+
+    // Setup style
+    ImGui::StyleColorsDark(); // or ImGui::StyleColorsClassic();
+
+    // Setup platform/renderer bindings
+    //ImGui_ImplGlfw_InitForOpenGL(window.get(), true);
+    ImGui_ImplGlfw_InitForOpenGL(window.get(), false);
+    ImGui_ImplOpenGL3_Init("#version 330"); // GLSL version
+}
+
+void Window::renderImGui()
+{
+    // Example: create a simple window
+    ImGui::Begin("Hello, ImGui!");
+    ImGui::Text("This is some debug text.");
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+        1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::End();
+
+    // Render ImGui to OpenGL
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Window::startImGuiFrame()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+void Window::terminateImGui()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }

@@ -158,7 +158,7 @@
     <ClInclude Include="src\entity\entityChest.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\misc\fileManager.hpp">
+    <ClInclude Include="src\utils\fileManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\inventory\inventoryManager.hpp">

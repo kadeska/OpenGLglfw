@@ -4,10 +4,7 @@
 #include <string>
 #include <GLFW/glfw3.h>
 
-#include "../world/world.hpp"
-#include "../shader/shader.hpp"
 #include "input/inputManager.hpp"
-
 #include "../misc/stateManager.hpp"
 #include "../render/loadingScreenRenderer.hpp"
 
@@ -28,6 +25,17 @@ class SceneRenderer;
 */
 class Window
 {
+private:
+
+    // for window size type
+    struct WindowSize {
+        unsigned int x;
+        unsigned int y;
+    };
+    // Window size
+    const unsigned int SCR_WIDTH = 800;
+    const unsigned int SCR_HEIGHT = 600;
+
 public:
     Window(StateManager::GameStateManager& _gameStateManager);
     ~Window() = default;
@@ -35,17 +43,11 @@ public:
     //void initSceneRenderer();
     void createWindow();
     void loadOpenGL();
-    void createShaderProgram(); // deprecated
-    void loadTextures();        // deprecated
-    void imGuiNewFrame();
-    void mainLoop(World* world);
+    void mainLoop();
     void terminateWindow();
 
-    int getScreenWidth() const {
-        return SCR_WIDTH;
-	}
-    int getScreenHeight() const {
-        return SCR_HEIGHT;
+    WindowSize getWindowSize() {
+		return { SCR_WIDTH, SCR_HEIGHT };
     }
 
     void swapBuffers() {
@@ -68,7 +70,10 @@ public:
 private:
 
     void processInput(World* world);
-    void cleanupImGui();
+	void initImGui();
+	void renderImGui();
+	void startImGuiFrame();
+	void terminateImGui();
 
     
 
@@ -91,14 +96,12 @@ private:
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
-    // Window size
-    const unsigned int SCR_WIDTH = 800;
-    const unsigned int SCR_HEIGHT = 600;
+
 
     // Text & overlays
     std::string fontFile = "fonts/arial.ttf";
     std::string pausedText = "Paused";
     std::string interactText = "Interact using E";
 
-    
+
 };

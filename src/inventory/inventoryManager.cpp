@@ -8,9 +8,9 @@
 using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 
-#include "../misc/FileManager.hpp"
-using FileManager::saveInventoryToFile;
-using FileManager::readInventoryFromFile;
+//#include "../utils/FileManager.hpp"
+//using FileManager::saveInventoryToFile;
+//using FileManager::readInventoryFromFile;
 
 unsigned int itemIDCounter = 1;
 
@@ -68,12 +68,12 @@ int InventoryManager::createRandomInventoy(const int& _inventoryID, Inventory& _
 
 int InventoryManager::loadInventoryFromFile(const int& _inventoryID, Inventory& _outInventory)
 {
-	std::string inventoryData;
+	/*std::string inventoryData;
 	if (!readInventoryFromFile("", inventoryData))
 	{
 		log("Loading inventory from file failed!", LogLevel::ERROR);
 		return -1;
-	}
+	}*/
 	return 0;
 }
 
@@ -115,7 +115,7 @@ int InventoryManager::saveInventory(Inventory& _inventory, std::string& _fileNam
 	// save the string to file with FileManager
 	//std::string filename = std::to_string(_inventory.getInventoryID());
 
-	return saveInventoryToFile(_fileName, inventoryData);
+	return 0;// saveInventoryToFile(_fileName, inventoryData);
 }
 
 void InventoryManager::formatInventoryDataForRender(std::vector<Item>& _items, std::string& _outData)

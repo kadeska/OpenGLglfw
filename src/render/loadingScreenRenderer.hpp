@@ -9,6 +9,7 @@ public:
     // it depends on OpenGL being loaded.
     void init();
     void render();
+    void cleanup();
 
 private:
     Window* window;
