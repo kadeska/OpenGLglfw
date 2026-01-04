@@ -20,6 +20,7 @@ private:
 	std::unique_ptr<Shader> textShader;
 	std::unique_ptr<Camera3D> camera;
 	int sceneWidth, sceneHeight;
+	bool initialized = false;
 
 	void loadModels();
 	
@@ -39,5 +40,6 @@ public:
 	void RenderScene();
 
 	Camera3D& getCamera();
+	bool hasBeenInitialized() const;
 };
 

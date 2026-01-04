@@ -33,7 +33,11 @@ static void onEnterLoading()
 {
 	// do loading tasks here
 	log("LOADING", LogLevel::STATE);
-	sceneRenderer->initSceneRenderer();
+	if (!sceneRenderer->hasBeenInitialized()) 
+	{
+		sceneRenderer->initSceneRenderer();
+	}
+	
 	if (!worldGenerator) 
 	{
 		worldGenerator = new WorldGenerator();
@@ -45,7 +49,6 @@ static void onEnterLoading()
 static void onExitLoading()
 {
 	log("Exit LOADING", LogLevel::DEBUG);
-	
 }
 
 Game3D::Game3D()

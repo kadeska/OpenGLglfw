@@ -59,6 +59,7 @@ void SceneRenderer::initSceneRenderer()
     initCamera();
     initSceneShader();
     populateRenderables();
+	initialized = true;
 }
 
 void SceneRenderer::initCamera()
@@ -141,7 +142,8 @@ void SceneRenderer::RenderScene()
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     useSceneShader();
     initProjectionMatrix();
@@ -152,4 +154,9 @@ void SceneRenderer::RenderScene()
 Camera3D& SceneRenderer::getCamera()
 {
     return *camera;
+}
+
+bool SceneRenderer::hasBeenInitialized() const
+{
+    return initialized;
 }
