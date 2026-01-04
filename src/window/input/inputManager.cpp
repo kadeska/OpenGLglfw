@@ -181,3 +181,4 @@ void InputManager::processMouseScroll(double yoffset)
 {
     sceneRenderer->getCamera().ProcessMouseScroll(static_cast<float>(yoffset));
 }
+

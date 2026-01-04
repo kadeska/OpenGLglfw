@@ -68,6 +68,11 @@ public:
     void setLoadingRenderer(LoadingScreenRenderer* _renderer);
     void setSceneRenderer(SceneRenderer* _renderer);
 
+    StateManager::GameStateManager& getGameState() 
+    {
+        return gameState;
+    }
+
 private:
 
     void processInput();

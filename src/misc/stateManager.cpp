@@ -48,9 +48,9 @@ bool GameStateManager::isValidTransition(GameState from, GameState to)
 {
     switch (from) {
     case GameState::NONE:
-        return to == GameState::LOADING;
+        return to == GameState::MAIN_MENU;
     case GameState::LOADING:
-        return to == GameState::PLAYING || to == GameState::MAIN_MENU;
+        return to == GameState::PLAYING;
     case GameState::PLAYING:
         return to == GameState::PAUSED || to == GameState::GAME_OVER;
     case GameState::PAUSED:
@@ -58,7 +58,7 @@ bool GameStateManager::isValidTransition(GameState from, GameState to)
 	case GameState::GAME_OVER:
 		return to == GameState::MAIN_MENU;
     case GameState::MAIN_MENU:
-		return to == GameState::LOADING;
+		return to == GameState::LOADING || to == GameState::NONE;
     default:
         return false;
     }

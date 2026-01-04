@@ -21,6 +21,8 @@ using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 using namespace StateManager;
 
+bool inPauseState = false;
+
 
 //GLFWwindow* win = nullptr;
 //World* world = nullptr;
@@ -50,6 +52,8 @@ namespace {
     void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
         if (!window) return;
+
+        //if () {}
 
         ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
         if (ImGui::GetIO().WantCaptureMouse)
@@ -209,6 +213,20 @@ void Window::mainLoop()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        if (gameState.is(GameState::NONE)) 
+        {
+            return;
+        }
+
+        if (inputManager->isPaused() && !gameState.is(GameState::PAUSED)) 
+        {
+            gameState.setState(GameState::PAUSED);
+        }
+        else if (!inputManager->isPaused() && gameState.is(GameState::PAUSED)) 
+        {
+            gameState.setState(GameState::PLAYING);
+        }
+
         // ----------------------------
         // Cursor state management
         // ----------------------------
@@ -228,6 +246,13 @@ void Window::mainLoop()
         //log("Game state is: " + std::to_string(static_cast<int>(gameState.getState())), LogLevel::DEBUG);
 
         switch (gameState.getState()) {
+
+        case GameState::PAUSED:
+            sceneRenderer->RenderScene();
+            break;
+
+        case GameState::MAIN_MENU:
+            break;
 
         case GameState::LOADING:
             //log("GameState is LOADING", LogLevel::DEBUG);
@@ -332,22 +357,48 @@ void Window::renderImGui()
     ImGui::SetCursorPosX((windowSize.x - buttonSize.x) * 0.5f);
     ImGui::Dummy(ImVec2(0.0f, 0.0f)); // <- anchors cursor without affecting layout
 
-    if (gameState.is(GameState::LOADING))
+
+    if (gameState.is(GameState::PAUSED)) 
     {
-        if (ImGui::Button("PLAY", buttonSize))
+        if (ImGui::Button("Continue", buttonSize)) 
         {
             gameState.setState(GameState::PLAYING);
+            inPauseState = false;
         }
+        if (ImGui::Button("Exit To Main Menu", buttonSize)) 
+        {
+            gameState.setState(GameState::MAIN_MENU);
+        }
+    }
+
+    if (gameState.is(GameState::MAIN_MENU)) 
+    {
+        if (ImGui::Button("Play", buttonSize)) 
+        {
+            gameState.setState(GameState::LOADING);
+        }
+        if (ImGui::Button("Options", buttonSize)) 
+        {
+            //gameState.setState(GameState::Options);
+        }
+        if (ImGui::Button("Quit", buttonSize)) 
+        {
+            gameState.setState(GameState::NONE);
+        }
+    }
+
+    if (gameState.is(GameState::LOADING))
+    {
     }
 
     if (gameState.is(GameState::PLAYING))
     {
-        if (ImGui::Button("EXIT", buttonSize))
+        /*if (ImGui::Button("EXIT", buttonSize))
         {
             gameState.setState(GameState::PAUSED);
             gameState.setState(GameState::MAIN_MENU);
             gameState.setState(GameState::LOADING);
-        }
+        }*/
     }
 
     ImGui::End();

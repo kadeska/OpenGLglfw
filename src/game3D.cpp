@@ -28,6 +28,9 @@ SceneRenderer* sceneRenderer = nullptr;
 WorldGenerator* worldGenerator = nullptr;
 
 
+static void onEnterPlaying() {}
+
+static void onExitPlaying() {}
 
 static void onEnterLoading()
 {
@@ -43,6 +46,8 @@ static void onEnterLoading()
 		worldGenerator = new WorldGenerator();
 		worldGenerator->generateDefaultWorld(world);
 	}
+
+	myWindow->getGameState().setState(StateManager::GameState::PLAYING);
 	
 }
 
@@ -70,7 +75,10 @@ Game3D::Game3D()
 	gameStateManager.onEnter(StateManager::GameState::LOADING, onEnterLoading);
 	gameStateManager.onExit(StateManager::GameState::LOADING, onExitLoading);
 
-	gameStateManager.setState(StateManager::GameState::LOADING);
+	gameStateManager.onEnter(StateManager::GameState::PLAYING, onEnterPlaying);
+	gameStateManager.onExit(StateManager::GameState::PLAYING, onExitPlaying);
+
+	gameStateManager.setState(StateManager::GameState::MAIN_MENU);
 	// start loading game data and once finished, switch to PLAYING state
 }
 
