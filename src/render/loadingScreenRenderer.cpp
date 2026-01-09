@@ -2,6 +2,9 @@
 #include "../window/window.hpp"
 #include "../shader/shader.hpp"
 #include "textRenderer.hpp"
+#include "../misc/programLogger.hpp"
+using ProgramLogger::log;
+using ProgramLogger::LogLevel;
 
 static Shader* shader = nullptr;
 static TextRenderer* textRenderer = nullptr;

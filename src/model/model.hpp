@@ -19,8 +19,9 @@ public:
 
 	bool gammaCorrection;
 
-	// Change constructor to accept const char* for compatibility
-	Model(const char* _path);
+	// Model requires the path to the model, and an ID
+	// ID is used for filtering
+	Model(const char* _path, unsigned int _ID);
 	void Draw(Shader& _shader);
 
 	Model(const Model&) = delete;
@@ -28,9 +29,11 @@ public:
 
 	Model(Model&&) = default;
 	Model& operator=(Model&&) = default;
+
+	unsigned int getID() { return this->ID; }
 	
 private:
-	
+	unsigned int ID;
 
 	void loadModel(std::string _path);
 	void processNode(aiNode* _node, const aiScene* _scene);

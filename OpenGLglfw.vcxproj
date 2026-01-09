@@ -218,6 +218,7 @@
     <ClInclude Include="src\physics\collisionManager.hpp" />
     <ClInclude Include="src\physics\collisionTests.hpp" />
     <ClInclude Include="src\physics\gameObject.hpp" />
+    <ClInclude Include="src\render\renderable.hpp" />
     <ClInclude Include="src\utils\fileManager.hpp" />
     <ClInclude Include="src\game3D.hpp" />
     <ClInclude Include="src\inventory\item\item.hpp" />

@@ -18,8 +18,12 @@ using ProgramLogger::log;
 using ProgramLogger::LogLevel;
 using LogLevel::DEBUG;
 
+//glm::mat4 transform;
 glm::mat4 projection;
 glm::mat4 view;
+
+// Gravity
+double GRAVITY = -0.067;
 
 GameObject* physicsBackpack = nullptr;
 CollisionManager* collisionManager = nullptr;
@@ -43,6 +47,11 @@ std::vector<glm::vec3> donutPositions = {
     { 10.0f, 2.0f, -1.0f }
 };
 
+std::vector<glm::vec3> groundPlanePositions =
+{
+    {0,0,0}
+};
+
 SceneRenderer::SceneRenderer(unsigned int w, unsigned int h) : sceneWidth(w), sceneHeight(h)
 {
     log("SceneRenderer constructor", DEBUG);
@@ -53,8 +62,10 @@ void SceneRenderer::loadModels()
 {
     log("Loading models", DEBUG);
 
-    models.push_back(new Model("models/backpack/backpack.obj"));
-    models.push_back(new Model("models/donut/donut.obj"));
+    models.push_back(new Model("models/backpack/backpack.obj", 0));
+    models.push_back(new Model("models/donut/donut.obj", 1));
+    models.push_back(new Model("models/plane/BasicFlatPlane_20x20.obj", 2));
+
 }
 
 void SceneRenderer::addGameObject(GameObject* _gameObject)
@@ -114,26 +125,61 @@ void SceneRenderer::initViewMatrix()
 
 void SceneRenderer::drawRenderables()
 {
-    for (const Renderable* r : renderables) {
+    for (const Renderable::Renderable* r : renderables) {
         sceneShader->setMat4("model", r->transform);
         r->model->Draw(*sceneShader);
     }
 }
 
+// Add every renderable gameObject from the world to the list of things to render 
 void SceneRenderer::populateRenderables()
 {
     log("Populating renderables", DEBUG);
-    for (const glm::vec3& pos : backpackPositions)
-    {
-        glm::mat4 transform(1.0f);
-        transform = glm::translate(transform, pos);
 
-        renderables.push_back(new Renderable(models[0], transform));
+    for (Model* m : models) 
+    {
+        unsigned int id = m->getID();
+        switch (id)
+        {
+        case 0:
+            log("Backpack", LogLevel::RENDERABLE);
+            addRenderables(backpackPositions, id);
+            break;
+        case 1:
+            log("Donut", LogLevel::RENDERABLE);
+            addRenderables(donutPositions, id);
+            break;
+        case 2:
+            log("GroundPlane", LogLevel::RENDERABLE);
+            addRenderables(groundPlanePositions, id);
+            break;
+
+        default:
+            break;
+        }
     }
 
-    for (int i = 0; i < renderables.size(); i++)
+    // populate gameObjects
+    log("Populating gameObjects", DEBUG);
+
+    for (Renderable::Renderable* r : renderables) 
     {
-        gameObjects.push_back(new GameObject(backpackPositions[i]));
+        glm::vec3& pos = r->position;
+        unsigned int id = r->model->getID();
+        switch (id)
+        {
+        case 0:
+            addGameObject(new GameObject(pos, r));
+            break;
+        case 1:
+            addGameObject(new GameObject(pos, r));
+            break;
+        case 2:
+            addGameObject(new GameObject(pos, r));
+            break;
+        default:
+            break;
+        }
     }
 
     gameObjects[0]->setUseGravity(true); // for testing the flag
@@ -151,36 +197,49 @@ void SceneRenderer::useSceneShader()
     glEnable(GL_CULL_FACE);
 }
 
-void SceneRenderer::updateRenderables()
+void SceneRenderer::updateRenderables(float _deltaTime)
 {
-    for (int i = 0; i < renderables.size() && i < gameObjects.size(); i++) 
+    // do update logic first, such as collision check, then applying gravity or velocity if allowed, 
+
+    for (GameObject* go : gameObjects) 
     {
-        if (gameObjects[i]->getUseGravity()) 
+        // if the gameObject has a collision object such as sphere then calculate collisions
+        if (go->getCollisionSphere() != nullptr) 
         {
             // check for collision
-            if (!collisionManager->checkForCollisions(gameObjects[i], nullptr))
+            if (!collisionManager->checkForCollisions(go, nullptr))
             {
                 // collision not detected, move
-                backpackPositions[i] += glm::vec3(0, -0.003, 0);
-                gameObjects[i]->setPosition(backpackPositions[i]);
+                if (go->getUseGravity()) 
+                {
+                    // apply gravity
+                    go->setVelocity(go->getVelocity() + glm::vec3(0, GRAVITY, 0) * _deltaTime);
+                    go->setPosition(go->getPosition() + go->getVelocity() * _deltaTime);
+                }
             }
         }
-        
+        // now translate the randerable based on update logic
+        // rebuild transform from scratch
+        glm::mat4 transform(1.0f);
+        transform = glm::translate(transform, go->getPosition());
+        go->getRenderable()->transform = transform;
     }
-    
+}
 
-    // update renderables
-    for (int i = 0; i < renderables.size(); i++) 
+void SceneRenderer::addRenderables(std::vector<glm::vec3> _pos, unsigned int _id)
+{
+    
+    for (glm::vec3 pos : _pos) 
     {
         glm::mat4 transform(1.0f);
-        transform = glm::translate(transform, backpackPositions[i]);
-
-        renderables[i]->transform = transform;
+        transform = glm::translate(transform, pos);
+        // This will break if I dont have all the expected models loaded
+        renderables.push_back(new Renderable::Renderable(models[_id], transform, pos)); //  Need to fix, id should not directly index into the models array like this. Need to make a type.
     }
 }
 
 //int y = 0;
-void SceneRenderer::RenderScene()
+void SceneRenderer::RenderScene(float _deltaTime)
 {
     // clear color
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
@@ -189,16 +248,7 @@ void SceneRenderer::RenderScene()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    // do physics updates
-    //y++;
-    //renderables[0].transform;
-
-    
-    
-
-
-
-    updateRenderables();
+    updateRenderables(_deltaTime);
     useSceneShader();
     initProjectionMatrix();
     initViewMatrix();
@@ -216,3 +266,4 @@ bool SceneRenderer::hasBeenInitialized() const
 {
     return initialized;
 }
+

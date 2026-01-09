@@ -9,8 +9,12 @@
 //	collisionSphere._radius = _radius;
 //}
 
-GameObject::GameObject(glm::vec3 _position)
+GameObject::GameObject(glm::vec3 _position, Renderable::Renderable* _renderable)
 {
+	if (_renderable != nullptr) 
+	{
+		gameObjectRenderable = _renderable;
+	}
 	collisionSphere = new Sphere();
 	setPosition(_position);
 }

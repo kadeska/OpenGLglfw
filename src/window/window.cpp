@@ -248,7 +248,7 @@ void Window::mainLoop()
         switch (gameState.getState()) {
 
         case GameState::PAUSED:
-            sceneRenderer->RenderScene();
+            sceneRenderer->RenderScene(deltaTime);
             break;
 
         case GameState::MAIN_MENU:
@@ -264,7 +264,7 @@ void Window::mainLoop()
         case GameState::PLAYING:
             //log("GameState is PLAYING", LogLevel::DEBUG);
             //glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-			sceneRenderer->RenderScene();
+			sceneRenderer->RenderScene(deltaTime);
             break;
         }
         
