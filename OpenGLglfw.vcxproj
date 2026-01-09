@@ -179,6 +179,9 @@
     <ClCompile Include="src\entity\entity.cpp" />
     <ClCompile Include="src\entity\entityCube.cpp" />
     <ClCompile Include="src\model\model.cpp" />
+    <ClCompile Include="src\physics\collisionManager.cpp" />
+    <ClCompile Include="src\physics\collisionTests.cpp" />
+    <ClCompile Include="src\physics\gameObject.cpp" />
     <ClCompile Include="src\render\loadingScreenRenderer.cpp" />
     <ClCompile Include="src\render\menuRenderer.cpp" />
     <ClCompile Include="src\render\sceneRenderer.cpp" />
@@ -212,6 +215,9 @@
     <ClInclude Include="src\camera\camera3D.hpp" />
     <ClInclude Include="src\entity\entity.hpp" />
     <ClInclude Include="src\entity\entityCube.hpp" />
+    <ClInclude Include="src\physics\collisionManager.hpp" />
+    <ClInclude Include="src\physics\collisionTests.hpp" />
+    <ClInclude Include="src\physics\gameObject.hpp" />
     <ClInclude Include="src\utils\fileManager.hpp" />
     <ClInclude Include="src\game3D.hpp" />
     <ClInclude Include="src\inventory\item\item.hpp" />

@@ -6,6 +6,8 @@
 #include "../model/model.hpp"
 #include "../camera/camera3D.hpp"
 
+#include "../physics/gameObject.hpp"
+
 struct Renderable {
 	Model* model;
 	glm::mat4 transform;
@@ -14,8 +16,9 @@ struct Renderable {
 class SceneRenderer
 {
 private:
-	std::vector<std::unique_ptr<Model>> models;
-	std::vector<Renderable> renderables;
+	std::vector<Model*> models;
+	std::vector<GameObject*> gameObjects;
+	std::vector<Renderable*> renderables;
 	std::unique_ptr<Shader> sceneShader;
 	std::unique_ptr<Shader> textShader;
 	std::unique_ptr<Camera3D> camera;
@@ -23,6 +26,7 @@ private:
 	bool initialized = false;
 
 	void loadModels();
+	void addGameObject(GameObject* _gameObject);
 	
 	void initCamera();
 	void initSceneShader();
@@ -31,6 +35,7 @@ private:
 	void drawRenderables();
 	void populateRenderables();
 	void useSceneShader();
+	void updateRenderables();
 
 public:
 	SceneRenderer(const unsigned int _screenWidth, const unsigned int _screenHeight);

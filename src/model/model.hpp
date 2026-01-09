@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 
+#include "../physics/collisionTests.hpp"
 #include "../shader/shader.hpp"
 #include "mesh/mesh.hpp"
 
@@ -15,20 +16,22 @@ public:
 	std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 	std::vector<Mesh>    meshes;
 	std::string directory;
-	glm::vec3 position;
+
 	bool gammaCorrection;
 
 	// Change constructor to accept const char* for compatibility
 	Model(const char* _path);
 	void Draw(Shader& _shader);
 
-
 	Model(const Model&) = delete;
 	Model& operator=(const Model&) = delete;
 
 	Model(Model&&) = default;
 	Model& operator=(Model&&) = default;
+	
 private:
+	
+
 	void loadModel(std::string _path);
 	void processNode(aiNode* _node, const aiScene* _scene);
 	Mesh processMesh(aiMesh* _mesh, const aiScene* _scene);

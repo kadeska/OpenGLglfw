@@ -19,6 +19,7 @@ using LogLevel::DEBUG;
 glm::mat4 projection;
 glm::mat4 view;
 
+GameObject* physicsBackpack = nullptr;
 
 
 // the vector of models to use for rendering each gameObject.
@@ -48,8 +49,14 @@ void SceneRenderer::loadModels()
 {
     log("Loading models", DEBUG);
 
-    models.push_back(std::make_unique<Model>("models/backpack/backpack.obj"));
-    models.push_back(std::make_unique<Model>("models/donut/donut.obj"));
+    models.push_back(new Model("models/backpack/backpack.obj"));
+    models.push_back(new Model("models/donut/donut.obj"));
+}
+
+void SceneRenderer::addGameObject(GameObject* _gameObject)
+{
+    log("Adding game object", LogLevel::DEBUG);
+    gameObjects.push_back(_gameObject);
 }
 
 void SceneRenderer::initSceneRenderer()
@@ -103,9 +110,9 @@ void SceneRenderer::initViewMatrix()
 
 void SceneRenderer::drawRenderables()
 {
-    for (const Renderable& r : renderables) {
-        sceneShader->setMat4("model", r.transform);
-        r.model->Draw(*sceneShader);
+    for (const Renderable* r : renderables) {
+        sceneShader->setMat4("model", r->transform);
+        r->model->Draw(*sceneShader);
     }
 }
 
@@ -117,10 +124,12 @@ void SceneRenderer::populateRenderables()
         glm::mat4 transform(1.0f);
         transform = glm::translate(transform, pos);
 
-        renderables.push_back({
-            models[0].get(),
-            transform
-            });
+        renderables.push_back(new Renderable(models[0], transform));
+    }
+
+    for (int i = 0; i < renderables.size(); i++)
+    {
+        gameObjects.push_back(new GameObject(backpackPositions[i]));
     }
 }
 
@@ -136,6 +145,31 @@ void SceneRenderer::useSceneShader()
     glEnable(GL_CULL_FACE);
 }
 
+void SceneRenderer::updateRenderables()
+{
+    for (int i = 0; i < renderables.size() && i < gameObjects.size(); i++) 
+    {
+        // check for collision
+        if (!CollisionTests::sphereToPlane(gameObjects[i]->getCollisionSphere(), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0)))
+        {
+            // collision not detected, move
+            backpackPositions[i] += glm::vec3(0, -0.003, 0);
+            gameObjects[i]->setPosition(backpackPositions[i]);
+        }
+    }
+    
+
+    // update renderables
+    for (int i = 0; i < renderables.size(); i++) 
+    {
+        glm::mat4 transform(1.0f);
+        transform = glm::translate(transform, backpackPositions[i]);
+
+        renderables[i]->transform = transform;
+    }
+}
+
+//int y = 0;
 void SceneRenderer::RenderScene()
 {
     // clear color
@@ -145,10 +179,22 @@ void SceneRenderer::RenderScene()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    // do physics updates
+    //y++;
+    //renderables[0].transform;
+
+    
+    
+
+
+
+    updateRenderables();
     useSceneShader();
     initProjectionMatrix();
     initViewMatrix();
     drawRenderables();
+
+    
 }
 
 Camera3D& SceneRenderer::getCamera()

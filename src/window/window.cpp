@@ -230,14 +230,14 @@ void Window::mainLoop()
         // ----------------------------
         // Cursor state management
         // ----------------------------
-        if (gameState.is(GameState::PLAYING) && !inputManager->isPaused())
+        /*if (gameState.is(GameState::PLAYING) && !inputManager->isPaused())
         {
             glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
         else
         {
             glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        }
+        }*/
 
         clearColor();
         pollEvents();        // Input first
