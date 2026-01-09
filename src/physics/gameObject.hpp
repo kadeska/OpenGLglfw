@@ -9,6 +9,7 @@ private:
 	//Model* gameObjectModelPtr = nullptr;
 	Sphere* collisionSphere = nullptr;
 	AABB aabb;
+	bool useGravity = false;
 
 public:
 	GameObject(glm::vec3 _position);
@@ -18,6 +19,8 @@ public:
 
 	Sphere* getCollisionSphere();
 	AABB getAABB();
+	bool getUseGravity() { return useGravity; }
+	void setUseGravity(bool _useGravity) { useGravity = _useGravity; }
 	
 };
 

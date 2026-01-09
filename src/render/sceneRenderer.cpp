@@ -135,6 +135,8 @@ void SceneRenderer::populateRenderables()
     {
         gameObjects.push_back(new GameObject(backpackPositions[i]));
     }
+
+    gameObjects[0]->setUseGravity(true);
 }
 
 void SceneRenderer::useSceneShader()
@@ -153,13 +155,17 @@ void SceneRenderer::updateRenderables()
 {
     for (int i = 0; i < renderables.size() && i < gameObjects.size(); i++) 
     {
-        // check for collision
-        if (!collisionManager->checkForCollisions(gameObjects[i], nullptr))
+        if (gameObjects[i]->getUseGravity()) 
         {
-            // collision not detected, move
-            backpackPositions[i] += glm::vec3(0, -0.003, 0);
-            gameObjects[i]->setPosition(backpackPositions[i]);
+            // check for collision
+            if (!collisionManager->checkForCollisions(gameObjects[i], nullptr))
+            {
+                // collision not detected, move
+                backpackPositions[i] += glm::vec3(0, -0.003, 0);
+                gameObjects[i]->setPosition(backpackPositions[i]);
+            }
         }
+        
     }
     
 
