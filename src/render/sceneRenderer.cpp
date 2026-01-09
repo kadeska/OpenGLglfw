@@ -136,7 +136,7 @@ void SceneRenderer::populateRenderables()
         gameObjects.push_back(new GameObject(backpackPositions[i]));
     }
 
-    gameObjects[0]->setUseGravity(true);
+    gameObjects[0]->setUseGravity(true); // for testing the flag
 }
 
 void SceneRenderer::useSceneShader()
