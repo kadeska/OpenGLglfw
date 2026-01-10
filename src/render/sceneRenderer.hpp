@@ -8,6 +8,7 @@
 
 #include "../physics/gameObject.hpp"
 #include "renderable.hpp"
+#include "../world/world.hpp"
 
 
 
@@ -15,16 +16,18 @@ class SceneRenderer
 {
 private:
 	std::vector<Model*> models;
-	std::vector<GameObject*> gameObjects;
 	std::vector<Renderable::Renderable*> renderables;
 	std::unique_ptr<Shader> sceneShader;
 	std::unique_ptr<Shader> textShader;
 	std::unique_ptr<Camera3D> camera;
+
+	World* world = nullptr;
+
 	int sceneWidth, sceneHeight;
 	bool initialized = false;
 
 	void loadModels();
-	void addGameObject(GameObject* _gameObject);
+	
 	
 	void initCamera();
 	void initSceneShader();
@@ -46,5 +49,10 @@ public:
 
 	Camera3D& getCamera();
 	bool hasBeenInitialized() const;
+
+	World* getWorld() { return world; }
+	void setWorld(World* _world) { world = _world; }
+
+	std::vector<Renderable::Renderable*>& getRenderablesRef() { return renderables; }
 };
 

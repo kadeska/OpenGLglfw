@@ -28,7 +28,13 @@ SceneRenderer* sceneRenderer = nullptr;
 WorldGenerator* worldGenerator = nullptr;
 
 
-static void onEnterPlaying() {}
+static void onEnterPlaying() 
+{
+	if (world) 
+	{
+		sceneRenderer->setWorld(world);
+	}
+}
 
 static void onExitPlaying() {}
 
@@ -43,10 +49,11 @@ static void onEnterLoading()
 	
 	if (!worldGenerator) 
 	{
-		worldGenerator = new WorldGenerator();
+		worldGenerator = new WorldGenerator(sceneRenderer->getRenderablesRef());
 		worldGenerator->generateDefaultWorld(world);
 	}
 
+	log("DONE LOADING", LogLevel::STATE);
 	myWindow->getGameState().setState(StateManager::GameState::PLAYING);
 	
 }
@@ -58,7 +65,7 @@ static void onExitLoading()
 
 Game3D::Game3D()
 {
-	log("Game3D Constructor_2", LogLevel::DEBUG);
+	log("Game3D Constructor", LogLevel::DEBUG);
 	myWindow = new Window(gameStateManager);
 	loadingScreenRenderer = new LoadingScreenRenderer(myWindow);
 	sceneRenderer = new SceneRenderer(myWindow->getWindowSize().x, myWindow->getWindowSize().y);

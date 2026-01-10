@@ -9,5 +9,9 @@ using ProgramLogger::LogLevel;
 World::World()
 {
 	log("World Constructor", LogLevel::DEBUG_V);
-	worldData = { "", std::vector<GameObject*>()};
+	//worldData = { "path", };
+}
+
+void World::update()
+{
 }

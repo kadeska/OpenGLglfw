@@ -23,7 +23,7 @@ glm::mat4 projection;
 glm::mat4 view;
 
 // Gravity
-double GRAVITY = -0.067;
+double GRAVITY = -0.057;
 
 GameObject* physicsBackpack = nullptr;
 CollisionManager* collisionManager = nullptr;
@@ -68,11 +68,7 @@ void SceneRenderer::loadModels()
 
 }
 
-void SceneRenderer::addGameObject(GameObject* _gameObject)
-{
-    log("Adding game object", LogLevel::DEBUG);
-    gameObjects.push_back(_gameObject);
-}
+
 
 void SceneRenderer::initSceneRenderer()
 {
@@ -134,7 +130,7 @@ void SceneRenderer::drawRenderables()
 // Add every renderable gameObject from the world to the list of things to render 
 void SceneRenderer::populateRenderables()
 {
-    log("Populating renderables", DEBUG);
+    log("Populating renderables", LogLevel::DEBUG_V);
 
     for (Model* m : models) 
     {
@@ -158,31 +154,6 @@ void SceneRenderer::populateRenderables()
             break;
         }
     }
-
-    // populate gameObjects
-    log("Populating gameObjects", DEBUG);
-
-    for (Renderable::Renderable* r : renderables) 
-    {
-        glm::vec3& pos = r->position;
-        unsigned int id = r->model->getID();
-        switch (id)
-        {
-        case 0:
-            addGameObject(new GameObject(pos, r));
-            break;
-        case 1:
-            addGameObject(new GameObject(pos, r));
-            break;
-        case 2:
-            addGameObject(new GameObject(pos, r));
-            break;
-        default:
-            break;
-        }
-    }
-
-    gameObjects[0]->setUseGravity(true); // for testing the flag
 }
 
 void SceneRenderer::useSceneShader()
@@ -201,7 +172,7 @@ void SceneRenderer::updateRenderables(float _deltaTime)
 {
     // do update logic first, such as collision check, then applying gravity or velocity if allowed, 
 
-    for (GameObject* go : gameObjects) 
+    for (GameObject* go : world->getGameObjects()) 
     {
         // if the gameObject has a collision object such as sphere then calculate collisions
         if (go->getCollisionSphere() != nullptr) 
